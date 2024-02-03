@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class FillLeds extends Command {
-    final double STEP_TIME = 0.04;  //increment every 40ms
+    final double STEP_TIME = 0.04; // increment every 40ms
     ILedSubsystem leds;
     AddressableLEDBuffer m_ledBuffer;
     double startTime;
@@ -21,22 +21,24 @@ public class FillLeds extends Command {
     }
 
     @Override
-    public boolean runsWhenDisabled() { return true; }
-    
+    public boolean runsWhenDisabled() {
+        return true;
+    }
+
     @Override
-    public void initialize() { 
+    public void initialize() {
         startTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public void execute() {
-        //calculate the current light
+        // calculate the current light
         double time = Timer.getFPGATimestamp() - startTime;
-        currentLight = (int)(time/STEP_TIME);
+        currentLight = (int) (time / STEP_TIME);
 
-        //set the pattern
-        for(int i=0; i<m_ledBuffer.getLength(); i++) {
-            if(i > currentLight) {
+        // set the pattern
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+            if (i > currentLight) {
                 color = Color.kBlack;
             }
             m_ledBuffer.setLED(i, color);
@@ -50,5 +52,6 @@ public class FillLeds extends Command {
     }
 
     @Override
-    public void end(boolean interrupted) { }
+    public void end(boolean interrupted) {
+    }
 }

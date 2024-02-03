@@ -37,9 +37,10 @@ public class GitVersion implements Serializable {
             FileInputStream fileInputStream = new FileInputStream(path);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             obj = (GitVersion) objectInputStream.readObject();
-            objectInputStream.close(); 
+            objectInputStream.close();
         } catch (Exception e) {
-            //generic catch is usually bad, but here we are using it to create a default whenever there is an issue loading it
+            // generic catch is usually bad, but here we are using it to create a default
+            // whenever there is an issue loading it
             obj = new GitVersion();
             obj.BuildDate = new Date();
             obj.IsModified = false;
@@ -58,18 +59,18 @@ public class GitVersion implements Serializable {
             Process pr;
             result.BuildDate = new Date();
 
-            //get the user who made the commit
+            // get the user who made the commit
             pr = rt.exec("git config user.name");
             pr.waitFor();
             result.BuildAuthor = new String(pr.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-            //remove newline at end of name
-            result.BuildAuthor = result.BuildAuthor.substring(0, result.BuildAuthor.length()-1);
+            // remove newline at end of name
+            result.BuildAuthor = result.BuildAuthor.substring(0, result.BuildAuthor.length() - 1);
 
             // run git log to get the last commits hash
             pr = rt.exec("git log -1 --pretty=tformat:%h");
             pr.waitFor();
             result.LastCommit = new String(pr.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-            if(result.LastCommit.length() > 7) {
+            if (result.LastCommit.length() > 7) {
                 result.LastCommit = result.LastCommit.substring(0, 7);
             }
 

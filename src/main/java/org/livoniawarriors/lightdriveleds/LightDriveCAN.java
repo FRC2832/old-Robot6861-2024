@@ -5,12 +5,11 @@ import edu.wpi.first.wpilibj.util.*;
 import edu.wpi.first.hal.can.*;
 import edu.wpi.first.hal.util.UncleanStatusException;
 
-public final class LightDriveCAN
-{
+public final class LightDriveCAN {
     private static int LD_ADDR;
     private ByteBuffer m_matrix;
     private RxPacket m_rx;
-    //private boolean m_init;
+    // private boolean m_init;
     private byte[] rxdata;
     private static ByteBuffer timestamp;
     private static ByteBuffer rxid;
@@ -21,7 +20,7 @@ public final class LightDriveCAN
 
     public LightDriveCAN() {
         this.m_matrix = ByteBuffer.allocate(16);
-        //this.m_init = false;
+        // this.m_init = false;
         this.m_rx = new RxPacket();
         (LightDriveCAN.timestamp = ByteBuffer.allocateDirect(4)).order(ByteOrder.LITTLE_ENDIAN);
         (LightDriveCAN.rxid = ByteBuffer.allocateDirect(4)).order(ByteOrder.LITTLE_ENDIAN);
@@ -39,16 +38,17 @@ public final class LightDriveCAN
             CANJNI.FRCNetCommCANSessionMuxSendMessage(LightDriveCAN.LD_ADDR, txdata, 100);
             this.m_matrix.get(txdata, 0, 8);
             CANJNI.FRCNetCommCANSessionMuxSendMessage(LightDriveCAN.LD_ADDR + 1, txdata, 100);
+        } catch (UncleanStatusException ex) {
         }
-        catch (UncleanStatusException ex) {}
         this.m_matrix.rewind();
         try {
-            this.rxdata = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(LightDriveCAN.rxid.asIntBuffer(), 536870911, LightDriveCAN.timestamp);
+            this.rxdata = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(LightDriveCAN.rxid.asIntBuffer(), 536870911,
+                    LightDriveCAN.timestamp);
             if (this.rxdata.length > 7) {
                 this.m_rx.SetBytes(this.rxdata);
             }
+        } catch (CANMessageNotFoundException ex2) {
         }
-        catch (CANMessageNotFoundException ex2) {}
     }
 
     public float GetCurrent(final int ch) {
@@ -106,22 +106,22 @@ public final class LightDriveCAN
             return;
         }
         ch = --ch * 3;
-        this.m_matrix.array()[ch] = (byte)color.green;
-        this.m_matrix.array()[ch + 1] = (byte)color.red;
-        this.m_matrix.array()[ch + 2] = (byte)color.blue;
+        this.m_matrix.array()[ch] = (byte) color.green;
+        this.m_matrix.array()[ch + 1] = (byte) color.red;
+        this.m_matrix.array()[ch + 2] = (byte) color.blue;
     }
 
     public void SetColor(int ch, final Color color, final double brightness) {
         if (ch < 1 || ch > 4) {
             return;
         }
-        byte red = (byte)(color.red * brightness);
-        byte green = (byte)(color.green * brightness);
-        byte blue = (byte)(color.blue * brightness);
+        byte red = (byte) (color.red * brightness);
+        byte green = (byte) (color.green * brightness);
+        byte blue = (byte) (color.blue * brightness);
         ch = --ch * 3;
-        this.m_matrix.array()[ch] = (byte)green;
-        this.m_matrix.array()[ch + 1] = (byte)red;
-        this.m_matrix.array()[ch + 2] = (byte)blue;
+        this.m_matrix.array()[ch] = (byte) green;
+        this.m_matrix.array()[ch + 1] = (byte) red;
+        this.m_matrix.array()[ch + 2] = (byte) blue;
     }
 
     public void SetLevel(final int ch, final byte level) {

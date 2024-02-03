@@ -15,7 +15,7 @@ import org.livoniawarriors.swerve.DriveXbox;
 import org.livoniawarriors.swerve.MoveWheels;
 import org.livoniawarriors.swerve.SwerveDriveSim;
 import org.livoniawarriors.swerve.SwerveDriveTrain;
-import org.livoniawarriors.swerve.SwerveHw23;
+import org.livoniawarriors.swerve.SwerveHw24;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -71,7 +71,7 @@ public class RobotContainer {
             odometry.setGyroHardware(new SimSwerveGyro(swerveDrive));
         } else {
             //competition robot
-            swerveDrive = new SwerveDriveTrain(new SwerveHw23(), odometry);
+            swerveDrive = new SwerveDriveTrain(new SwerveHw24(), odometry);
             odometry.setGyroHardware(new Pigeon2Gyro(0));
         }
         

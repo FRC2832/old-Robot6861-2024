@@ -23,11 +23,14 @@ public class TestLeds extends Command {
     }
 
     @Override
-    public boolean runsWhenDisabled() { return true; }
+    public boolean runsWhenDisabled() {
+        return true;
+    }
 
     @Override
-    public void initialize() { 
-        //normally this should be in the constructor, but moving to init so it won't always be in NT
+    public void initialize() {
+        // normally this should be in the constructor, but moving to init so it won't
+        // always be in NT
         subIndex = UtilFunctions.getNtSub("/TestLeds/Index", -1);
         subHue = UtilFunctions.getNtSub("/TestLeds/Hue", 0);
         subSat = UtilFunctions.getNtSub("/TestLeds/Saturation", 20);
@@ -36,23 +39,24 @@ public class TestLeds extends Command {
 
     @Override
     public void execute() {
-        //get color
-        Color newColor = Color.fromHSV((int)subHue.get(), (int)subSat.get(), (int)subValue.get());
-        int pos = (int)subValue.get();
+        // get color
+        Color newColor = Color.fromHSV((int) subHue.get(), (int) subSat.get(), (int) subValue.get());
+        int pos = (int) subValue.get();
 
-        //check if we are doing individual index
-        if(pos >= 0){
-            //fill the whole string with black
-            for(int i=0; i<m_ledBuffer.getLength(); i++) {
+        // check if we are doing individual index
+        if (pos >= 0) {
+            // fill the whole string with black
+            for (int i = 0; i < m_ledBuffer.getLength(); i++) {
                 m_ledBuffer.setLED(i, Color.kBlack);
             }
-            //color the specific LED
-            int max = leds.getLength()-1;
-            if(pos > max)  pos = max;
+            // color the specific LED
+            int max = leds.getLength() - 1;
+            if (pos > max)
+                pos = max;
             m_ledBuffer.setLED(pos, newColor);
         } else {
-            //fill the whole string with the color
-            for(int i=0; i<m_ledBuffer.getLength(); i++) {
+            // fill the whole string with the color
+            for (int i = 0; i < m_ledBuffer.getLength(); i++) {
                 m_ledBuffer.setLED(i, newColor);
             }
         }
@@ -66,5 +70,6 @@ public class TestLeds extends Command {
     }
 
     @Override
-    public void end(boolean interrupted) { }
+    public void end(boolean interrupted) {
+    }
 }

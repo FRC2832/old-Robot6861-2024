@@ -18,16 +18,18 @@ public class ColorWave extends Command {
         m_ledBuffer = new AddressableLEDBuffer(leds.getLength());
         ColorHSV hsv = ColorHSV.fromColor(color);
 
-        hueCalc = new UpdateValues(hsv.hue-10, hsv.hue-10, 80);
-        sat = (int)hsv.sat;
-        valueCalc = new UpdateValues(hsv.hue-27, hsv.hue+27, 110);
+        hueCalc = new UpdateValues(hsv.hue - 10, hsv.hue - 10, 80);
+        sat = (int) hsv.sat;
+        valueCalc = new UpdateValues(hsv.hue - 27, hsv.hue + 27, 110);
     }
 
     @Override
-    public boolean runsWhenDisabled() { return true; }
-    
+    public boolean runsWhenDisabled() {
+        return true;
+    }
+
     @Override
-    public void initialize() { 
+    public void initialize() {
     }
 
     @Override
@@ -38,10 +40,10 @@ public class ColorWave extends Command {
             double value = valueCalc.get(i);
 
             // Set the value
-            m_ledBuffer.setHSV(i, (int)hue, sat, (int)value);
+            m_ledBuffer.setHSV(i, (int) hue, sat, (int) value);
         }
-        hueCalc.Step();
-        valueCalc.Step();
+        hueCalc.step();
+        valueCalc.step();
 
         leds.setData(m_ledBuffer);
     }
@@ -52,7 +54,8 @@ public class ColorWave extends Command {
     }
 
     @Override
-    public void end(boolean interrupted) { }
+    public void end(boolean interrupted) {
+    }
 
     /**
      * Run a sine wave between 2 values
@@ -63,25 +66,26 @@ public class ColorWave extends Command {
 
         /**
          * Create the object
-         * @param min The smallest value to output
-         * @param max The biggest value to output
+         * 
+         * @param min   The smallest value to output
+         * @param max   The biggest value to output
          * @param count How many loops it takes to go finish a wave
          */
         public UpdateValues(double min, double max, int count) {
-            this.Min = Math.max(min, 0);
-            this.Max = Math.min(max, 255);
+            this.Min = Math.max(min, 0.0);
+            this.Max = Math.min(max, 255.0);
             this.Count = count;
         }
 
         public double get(int step) {
-            double diff = (Max - Min)/2;
+            double diff = (Max - Min) / 2;
             double mid = diff + Min;
 
             double value = mid + diff * Math.sin(2 * Math.PI * (loop + step) / Count);
             return value;
         }
 
-        public void Step() {
+        public void step() {
             loop++;
             loop %= Count;
         }

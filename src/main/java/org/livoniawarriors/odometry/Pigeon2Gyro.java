@@ -13,7 +13,7 @@ public class Pigeon2Gyro implements IGyroHardware {
     }
 
     public Pigeon2Gyro(int id, String bus_name) {
-        if(bus_name != null) {
+        if (bus_name != null) {
             pigeon = new Pigeon2(id, bus_name);
         } else {
             pigeon = new Pigeon2(id);
@@ -28,8 +28,8 @@ public class Pigeon2Gyro implements IGyroHardware {
         pigeon.getYawPitchRoll(ypr_deg);
         pigeon.getBiasedAccelerometer(temp);
 
-        for(int i=0; i<3; i++) {
-            xyz_mps[i] = ((double)temp[i])/16384;
+        for (int i = 0; i < 3; i++) {
+            xyz_mps[i] = ((double) temp[i]) / 16384;
         }
     }
 

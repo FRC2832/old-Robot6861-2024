@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
- * Drive the robot with xbox controller 
+ * Drive the robot with xbox controller
  */
 public class DriveXbox extends Command {
     private SwerveDriveTrain drive;
@@ -16,8 +16,9 @@ public class DriveXbox extends Command {
 
     /**
      * Inject the drivetrain and controller to use
+     * 
      * @param drive Drivetrain to command
-     * @param cont Controller to read from
+     * @param cont  Controller to read from
      */
     public DriveXbox(SwerveDriveTrain drive, XboxController cont) {
         this.drive = drive;
@@ -28,12 +29,12 @@ public class DriveXbox extends Command {
 
     @Override
     public void initialize() {
-        drive.SwerveDrive(0, 0, 0, false);
+        drive.swerveDrive(0.0, 0.0, 0.0, false);
     }
 
     @Override
     public void execute() {
-        //driver clicked field reset stick
+        // driver clicked field reset stick
         if (cont.getLeftStickButtonPressed()) {
             drive.resetFieldOriented();
         }
@@ -41,20 +42,20 @@ public class DriveXbox extends Command {
         var dead = deadband.get();
         double xSpeed = UtilFunctions.deadband(-cont.getLeftY(), dead);
         double ySpeed = UtilFunctions.deadband(-cont.getLeftX(), dead);
-        double turn   = UtilFunctions.deadband(-cont.getRightX(), dead);
-        drive.SwerveDrive(
-            xSpeed * drive.getMaxDriverSpeed(), 
-            ySpeed * drive.getMaxDriverSpeed(), 
-            turn * drive.getMaxDriverOmega()
-        );
+        double turn = UtilFunctions.deadband(-cont.getRightX(), dead);
+        drive.swerveDrive(
+                xSpeed * drive.getMaxDriverSpeed(),
+                ySpeed * drive.getMaxDriverSpeed(),
+                turn * drive.getMaxDriverOmega());
     }
 
     @Override
     public boolean isFinished() {
-        //never end
+        // never end
         return false;
     }
 
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+    }
 }

@@ -28,7 +28,7 @@ public class MoveWheels extends Command {
     public boolean isFinished() {
         SwerveModulePosition[] positions = drive.getSwervePositions();
         boolean result = true;
-        for(int i=0; i<states.length; i++) {
+        for(int i = 0; i < states.length; i++) {
             double angle = positions[i].angle.minus(states[i].angle).getDegrees();
             angle = MathUtil.inputModulus(angle, -180, 180);
             if (Math.abs(angle) > 3 || states[i].speedMetersPerSecond > drive.getMinSpeed()) {

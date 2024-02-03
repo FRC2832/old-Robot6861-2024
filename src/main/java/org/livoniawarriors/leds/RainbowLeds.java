@@ -16,10 +16,13 @@ public class RainbowLeds extends Command {
     }
 
     @Override
-    public boolean runsWhenDisabled() { return true; }
-    
+    public boolean runsWhenDisabled() {
+        return true;
+    }
+
     @Override
-    public void initialize() { }
+    public void initialize() {
+    }
 
     @Override
     public void execute() {
@@ -44,5 +47,6 @@ public class RainbowLeds extends Command {
     }
 
     @Override
-    public void end(boolean interrupted) { }
+    public void end(boolean interrupted) {
+    }
 }
