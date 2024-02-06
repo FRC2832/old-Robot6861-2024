@@ -104,37 +104,37 @@ public class Logger implements Runnable {
         UtilFunctions.addPeriodic(this, 0.1, 0);
     }
 
-    public static void RegisterTalon(String name, BaseTalon talon) {
+    public static void registerTalon(String name, BaseTalon talon) {
         items.put(name, talon);
     }
 
-    public static void RegisterCanSparkMax(String name, CANSparkMax spark) {
+    public static void registerCanSparkMax(String name, CANSparkMax spark) {
         items.put(name, spark);
     }
 
-    public static void RegisterCanCoder(String name, CANCoder coder) {
+    public static void registerCanCoder(String name, CANCoder coder) {
         items.put(name, coder);
     }
 
-    public static void RegisterSensor(String name, DoubleSupplier value) {
+    public static void registerSensor(String name, DoubleSupplier value) {
         items.put(name, value);
     }
 
-    public static void RegisterPdp(PowerDistribution pdp, String[] channelNames) {
+    public static void registerPdp(PowerDistribution pdp, String[] channelNames) {
         Logger.pdp = pdp;
         pdpNames = channelNames;
     }
 
-    public static void RegisterPneumaticHub(PneumaticHub ph, String[] channelNames) {
+    public static void registerPneumaticHub(PneumaticHub ph, String[] channelNames) {
         Logger.ph = ph;
         pneumaticNames = channelNames;
     }
 
-    public static void RegisterLoopTimes(Robot robot) {
+    public static void registerLoopTimes(Robot robot) {
         new LoopTimeLogger(robot, taskTimings);
     }
 
-    public static void RegisterPigeon(BasePigeon pigeon) {
+    public static void registerPigeon(BasePigeon pigeon) {
         Logger.pigeon = pigeon;
     }
 
@@ -207,17 +207,17 @@ public class Logger implements Runnable {
         }
 
         if (pigeon != null) {
-            double[] pigeon_data = new double[3];
-            pigeon.getYawPitchRoll(pigeon_data);
-            sensorTable.getEntry("Pigeon Yaw").setDouble(pigeon_data[0]);
-            sensorTable.getEntry("Pigeon Pitch").setDouble(pigeon_data[1]);
-            sensorTable.getEntry("Pigeon Roll").setDouble(pigeon_data[2]);
+            double[] pigeonData = new double[3];
+            pigeon.getYawPitchRoll(pigeonData);
+            sensorTable.getEntry("Pigeon Yaw").setDouble(pigeonData[0]);
+            sensorTable.getEntry("Pigeon Pitch").setDouble(pigeonData[1]);
+            sensorTable.getEntry("Pigeon Roll").setDouble(pigeonData[2]);
 
-            short[] accel_data = new short[3];
-            pigeon.getBiasedAccelerometer(accel_data);
-            sensorTable.getEntry("Pigeon Ax").setDouble(accel_data[0] / 16384.);
-            sensorTable.getEntry("Pigeon Ay").setDouble(accel_data[1] / 16384.);
-            sensorTable.getEntry("Pigeon Az").setDouble(accel_data[2] / 16384.);
+            short[] accelData = new short[3];
+            pigeon.getBiasedAccelerometer(accelData);
+            sensorTable.getEntry("Pigeon Ax").setDouble(accelData[0] / 16384.);
+            sensorTable.getEntry("Pigeon Ay").setDouble(accelData[1] / 16384.);
+            sensorTable.getEntry("Pigeon Az").setDouble(accelData[2] / 16384.);
 
             canStatusTable.getEntry("Pigeon").setString(pigeon.getLastError().name());
 
@@ -345,9 +345,9 @@ public class Logger implements Runnable {
         StringBuilder work = new StringBuilder();
 
         // iterate through all the fields and find the boolean ones
-        Field fieldlist[] = obj.getClass().getDeclaredFields();
-        for (int i = 0; fieldlist.length > i; i++) {
-            Field fld = fieldlist[i];
+        Field[] fieldList = obj.getClass().getDeclaredFields();
+        for (int i = 0; fieldList.length > i; i++) {
+            Field fld = fieldList[i];
             if (fld.getType().equals(boolean.class)) {
                 try {
                     boolean value = fld.getBoolean(obj);

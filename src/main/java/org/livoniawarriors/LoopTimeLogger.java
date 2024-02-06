@@ -12,8 +12,8 @@ import frc.robot.Robot;
 
 public class LoopTimeLogger implements Runnable {
     private NetworkTable table;
-    Map<String, Long> robotEpochs;
-    Map<String, Long> cmdEpochs;
+    private Map<String, Long> robotEpochs;
+    private Map<String, Long> cmdEpochs;
 
     public LoopTimeLogger(Robot robot, NetworkTable table) {
         /**

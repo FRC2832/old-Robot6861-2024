@@ -130,6 +130,9 @@ public class SwerveHw24 implements ISwerveDriveIo {
             //the maximum acceleration we want the motor to go
             //allConfigs.motionAcceleration = 5 * COUNTS_PER_METER;
 
+            motor.setSmartCurrentLimit(20); // TODO: May need to comment these out since the CTRE version sets cfg to disabled.     
+            motor.setSecondaryCurrentLimit(30); // TODO: Increase at somepoint 
+
             //motor.configAllSettings(allConfigs);
             // motor.setSelectedSensorPosition(0); Replaced with setPosition(0) for CANCoders below
             motor.setControlFramePeriodMs(40);
@@ -172,12 +175,12 @@ public class SwerveHw24 implements ISwerveDriveIo {
         //register stuff for logging
         for (int wheel = 0; wheel < numWheels; wheel++) {
             final int wheelFinal = wheel;
-            Logger.RegisterCanSparkMax(null, null); //TODO: Replace with our CANSparkMax objects.
-            Logger.RegisterCanSparkMax(null, null);
-            Logger.RegisterSensor(null, null); // TODO: Replace with our RelativeEncoders
-            Logger.RegisterSensor(moduleNames[wheel] + " Speed", () -> getCornerSpeed(wheelFinal));
-            Logger.RegisterSensor(moduleNames[wheel] + " Turn Pos", () -> getCornerAngle(wheelFinal));
-            Logger.RegisterSensor(moduleNames[wheel] + " Drive Dist", () -> getCornerDistance(wheelFinal));
+            Logger.registerCanSparkMax(null, null); //TODO: Replace with our CANSparkMax objects.
+            Logger.registerCanSparkMax(null, null);
+            Logger.registerSensor(null, null); // TODO: Replace with our RelativeEncoders
+            Logger.registerSensor(moduleNames[wheel] + " Speed", () -> getCornerSpeed(wheelFinal));
+            Logger.registerSensor(moduleNames[wheel] + " Turn Pos", () -> getCornerAngle(wheelFinal));
+            Logger.registerSensor(moduleNames[wheel] + " Drive Dist", () -> getCornerDistance(wheelFinal));
         }
     }
 

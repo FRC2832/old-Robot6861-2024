@@ -63,16 +63,16 @@ public class REVColorSensor {
         // empty, otherwise it will try to go to one of your targets. Should be the idle
         // color.
         final Color kUnknownTarget = new Color(0.269, 0.481, 0.249);
-        ColorMatch m_colorMatcher = new ColorMatch();
+        ColorMatch colorMatcher = new ColorMatch();
         // add all the targets to see
-        m_colorMatcher.addColorMatch(kBlueTarget);
-        m_colorMatcher.addColorMatch(kRedTarget);
-        m_colorMatcher.addColorMatch(kUnknownTarget);
+        colorMatcher.addColorMatch(kBlueTarget);
+        colorMatcher.addColorMatch(kRedTarget);
+        colorMatcher.addColorMatch(kUnknownTarget);
         // this needs to be tuned based on lighting conditions
-        m_colorMatcher.setConfidenceThreshold(0.95);
+        colorMatcher.setConfidenceThreshold(0.95);
 
         // periodic
-        ColorMatchResult match = m_colorMatcher.matchClosestColor(getColor());
+        ColorMatchResult match = colorMatcher.matchClosestColor(getColor());
         if (match.color == kBlueTarget) {
             SmartDashboard.putString("Color Sensor Match", "Blue");
         } else if (match.color == kRedTarget) {

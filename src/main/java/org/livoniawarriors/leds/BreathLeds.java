@@ -11,14 +11,14 @@ import edu.wpi.first.wpilibj2.command.Command;
  * and off
  */
 public class BreathLeds extends Command {
-    final double STEP_VALUE = 5.0; // how much to increment value every 20ms
-    final double MAX_VALUE = 200.0;
-    final double MIN_VALUE = 25.0;
+    private static final double STEP_VALUE = 5.0; // how much to increment value every 20ms
+    private static final double MAX_VALUE = 200.0;
+    private static final double MIN_VALUE = 25.0;
 
-    ILedSubsystem leds;
-    AddressableLEDBuffer m_ledBuffer;
-    int hue, sat, breath;
-    boolean increment;
+    private ILedSubsystem leds;
+    private AddressableLEDBuffer m_ledBuffer;
+    private int hue, sat, breath;
+    private boolean increment;
 
     public BreathLeds(ILedSubsystem leds, Color color) {
         this.leds = leds;

@@ -38,9 +38,8 @@ public class UtilFunctions {
 
         if (abs > deadband) {
             return Math.signum(input) * ((abs - deadband) / (1 - deadband));
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     /**
@@ -67,11 +66,10 @@ public class UtilFunctions {
         if (Preferences.containsKey(key)) {
             // key exists, return the value
             return Preferences.getDouble(key, backup);
-        } else {
-            // key missing, set default
-            Preferences.initDouble(key, backup);
-            return backup;
         }
+        // key missing, set default
+        Preferences.initDouble(key, backup);
+        return backup;
     }
 
     /**
@@ -87,11 +85,10 @@ public class UtilFunctions {
         if (Preferences.containsKey(key)) {
             // key exists, return the value
             return Preferences.getBoolean(key, backup);
-        } else {
-            // key missing, set default
-            Preferences.initBoolean(key, backup);
-            return backup;
         }
+        // key missing, set default
+        Preferences.initBoolean(key, backup);
+        return backup;
     }
 
     /**

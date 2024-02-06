@@ -27,13 +27,13 @@ public class Odometry extends SubsystemBase {
     public static final double FIELD_LENGTH_METERS = 16.542;
     public static final double FIELD_WIDTH_METERS = 8.014;
 
-    IGyroHardware hardware;
-    double lastVisionTime;
-    SwerveDriveOdometry odometry;
-    SwerveDrivePoseEstimator poseEstimator;
-    SwerveDriveTrain drive;
-    Pose2d robotPose;
-    Pose2d startPose;
+    private IGyroHardware hardware;
+    private double lastVisionTime;
+    private SwerveDriveOdometry odometry;
+    private SwerveDrivePoseEstimator poseEstimator;
+    private SwerveDriveTrain drive;
+    private Pose2d robotPose;
+    private Pose2d startPose;
 
     private Field2d field;
     private Translation2d[] swervePositions;
@@ -52,12 +52,12 @@ public class Odometry extends SubsystemBase {
         plotCorners = UtilFunctions.getSettingSub("/Odometry/Plot Swerve Corners", false);
 
         SmartDashboard.putData("Field", field);
-        Logger.RegisterSensor("Gyro Yaw", this::getGyroAngle);
-        Logger.RegisterSensor("Gyro Pitch", this::getGyroPitch);
-        Logger.RegisterSensor("Gyro Roll", this::getGyroRoll);
-        Logger.RegisterSensor("Gyro X Accel", hardware::getXAccel);
-        Logger.RegisterSensor("Gyro Y Accel", hardware::getYAccel);
-        Logger.RegisterSensor("Gyro Z Accel", hardware::getZAccel);
+        Logger.registerSensor("Gyro Yaw", this::getGyroAngle);
+        Logger.registerSensor("Gyro Pitch", this::getGyroPitch);
+        Logger.registerSensor("Gyro Roll", this::getGyroRoll);
+        Logger.registerSensor("Gyro X Accel", hardware::getXAccel);
+        Logger.registerSensor("Gyro Y Accel", hardware::getYAccel);
+        Logger.registerSensor("Gyro Z Accel", hardware::getZAccel);
     }
 
     public void setSwerveDrive(SwerveDriveTrain drive) {
@@ -135,9 +135,8 @@ public class Odometry extends SubsystemBase {
             return poseToFlip.relativeTo(new Pose2d(
                     new Translation2d(FIELD_LENGTH_METERS, FIELD_WIDTH_METERS),
                     new Rotation2d(Math.PI)));
-        } else {
-            return poseToFlip;
         }
+        return poseToFlip;
     }
 
     /**
@@ -150,9 +149,8 @@ public class Odometry extends SubsystemBase {
         Optional<Alliance> alliance = DriverStation.getAlliance();
         if (alliance.isPresent() && alliance.get() == Alliance.Red) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public void setStartingPose(Pose2d pose) {

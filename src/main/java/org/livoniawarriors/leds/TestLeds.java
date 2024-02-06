@@ -8,18 +8,18 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class TestLeds extends Command {
-    ILedSubsystem leds;
-    AddressableLEDBuffer m_ledBuffer;
+    private ILedSubsystem leds;
+    private AddressableLEDBuffer ledBuffer;
 
-    IntegerSubscriber subIndex;
-    IntegerSubscriber subHue;
-    IntegerSubscriber subSat;
-    IntegerSubscriber subValue;
+    private IntegerSubscriber subIndex;
+    private IntegerSubscriber subHue;
+    private IntegerSubscriber subSat;
+    private IntegerSubscriber subValue;
 
     public TestLeds(ILedSubsystem leds) {
         this.leds = leds;
         addRequirements(leds);
-        m_ledBuffer = new AddressableLEDBuffer(leds.getLength());
+        ledBuffer = new AddressableLEDBuffer(leds.getLength());
     }
 
     @Override
@@ -46,22 +46,22 @@ public class TestLeds extends Command {
         // check if we are doing individual index
         if (pos >= 0) {
             // fill the whole string with black
-            for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-                m_ledBuffer.setLED(i, Color.kBlack);
+            for (int i = 0; i < ledBuffer.getLength(); i++) {
+                ledBuffer.setLED(i, Color.kBlack);
             }
             // color the specific LED
             int max = leds.getLength() - 1;
             if (pos > max)
                 pos = max;
-            m_ledBuffer.setLED(pos, newColor);
+            ledBuffer.setLED(pos, newColor);
         } else {
             // fill the whole string with the color
-            for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-                m_ledBuffer.setLED(i, newColor);
+            for (int i = 0; i < ledBuffer.getLength(); i++) {
+                ledBuffer.setLED(i, newColor);
             }
         }
 
-        leds.setData(m_ledBuffer);
+        leds.setData(ledBuffer);
     }
 
     @Override

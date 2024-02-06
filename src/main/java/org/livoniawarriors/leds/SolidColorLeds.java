@@ -5,15 +5,15 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SolidColorLeds extends Command {
-    ILedSubsystem leds;
-    AddressableLEDBuffer m_ledBuffer;
+    private ILedSubsystem leds;
+    private AddressableLEDBuffer ledBuffer;
 
     public SolidColorLeds(ILedSubsystem leds, Color color) {
         this.leds = leds;
         addRequirements(leds);
-        m_ledBuffer = new AddressableLEDBuffer(leds.getLength());
-        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-            m_ledBuffer.setLED(i, color);
+        ledBuffer = new AddressableLEDBuffer(leds.getLength());
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+            ledBuffer.setLED(i, color);
         }
     }
 
@@ -24,7 +24,7 @@ public class SolidColorLeds extends Command {
 
     @Override
     public void initialize() {
-        leds.setData(m_ledBuffer);
+        leds.setData(ledBuffer);
     }
 
     @Override

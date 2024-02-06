@@ -7,15 +7,15 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ColorWave extends Command {
-    ILedSubsystem leds;
-    AddressableLEDBuffer m_ledBuffer;
-    UpdateValues hueCalc, valueCalc;
-    int sat;
+    private ILedSubsystem leds;
+    private AddressableLEDBuffer ledBuffer;
+    private UpdateValues hueCalc, valueCalc;
+    private int sat;
 
     public ColorWave(ILedSubsystem leds, Color color) {
         this.leds = leds;
         addRequirements(leds);
-        m_ledBuffer = new AddressableLEDBuffer(leds.getLength());
+        ledBuffer = new AddressableLEDBuffer(leds.getLength());
         ColorHSV hsv = ColorHSV.fromColor(color);
 
         hueCalc = new UpdateValues(hsv.hue - 10, hsv.hue - 10, 80);
@@ -35,17 +35,17 @@ public class ColorWave extends Command {
     @Override
     public void execute() {
         // For every pixel
-        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        for (var i = 0; i < ledBuffer.getLength(); i++) {
             double hue = hueCalc.get(i);
             double value = valueCalc.get(i);
 
             // Set the value
-            m_ledBuffer.setHSV(i, (int) hue, sat, (int) value);
+            ledBuffer.setHSV(i, (int) hue, sat, (int) value);
         }
         hueCalc.step();
         valueCalc.step();
 
-        leds.setData(m_ledBuffer);
+        leds.setData(ledBuffer);
     }
 
     @Override

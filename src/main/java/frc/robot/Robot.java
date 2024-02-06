@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-    private Command m_autonomousCommand;
-    private RobotContainer m_robotContainer;
+    private Command autonomousCommand;
+    private RobotContainer robotContainer;
     private Logger logger;
 
     /**
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
 
         //internal logger class
         logger = new Logger();
-        Logger.RegisterLoopTimes(this);
+        Logger.registerLoopTimes(this);
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         /* This is a fix from 2023 with a Rio2.  We took a very hard hit and the Rio went into brownout
@@ -60,8 +60,8 @@ public class Robot extends TimedRobot {
 
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
-        m_robotContainer = new RobotContainer();
-        m_robotContainer.configureBindings();
+        robotContainer = new RobotContainer();
+        robotContainer.configureBindings();
 
         //start logging class after all the subsystems have initialized
         logger.start();
@@ -93,11 +93,11 @@ public class Robot extends TimedRobot {
     /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
+        if (autonomousCommand != null) {
+            autonomousCommand.schedule();
         }
     }
 
@@ -111,15 +111,15 @@ public class Robot extends TimedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel();
         }
 
         //this clears all the old polled triggers
         CommandScheduler.getInstance().getActiveButtonLoop().clear();
         //since we sometimes switch configurations based on controller type, 
         //reset the bindings
-        m_robotContainer.configureBindings();
+        robotContainer.configureBindings();
     }
 
     /** This function is called periodically during operator control. */
