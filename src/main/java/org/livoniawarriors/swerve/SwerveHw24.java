@@ -2,21 +2,13 @@ package org.livoniawarriors.swerve;
 
 import org.livoniawarriors.Logger;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.jni.CANSparkMaxJNI;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,18 +18,19 @@ import edu.wpi.first.wpilibj.RobotController;
 @SuppressWarnings("removal")
 public class SwerveHw24 implements ISwerveDriveIo {
     //measuring the robot, we got 11114 counts/90*, the theoretical amount is 10971.428/90* (150/7:1 gear ratio, 2048 counts/rev)
-    private final double COUNTS_PER_DEGREE = 121.9; //using theoretical amount
+    private static final double COUNTS_PER_DEGREE = 121.9; //using theoretical amount
 
     //measuring the robot, we got 13899 counts/rev, theoretical is 13824 counts/rev (L2 gear set at 6.75:1 ratio)
     //needs to be scaled * 39.37 (in/m) / (4"*Pi wheel diameter) / 10 (units per 100ms)
-    private final double COUNTS_PER_METER = 4331.1 / 0.94362;     //velocity units
-    private final double DIST_PER_METER = COUNTS_PER_METER * 10;        //distance units
+    private static final double COUNTS_PER_METER = 4331.1 / 0.94362;     //velocity units
+    private static final double DIST_PER_METER = COUNTS_PER_METER * 10;        //distance units
 
     //motors and sensors
     private CANSparkMax[] turnMotors;  
     private CANSparkMax[] driveMotors;
     private CANCoder[] absSensors;  //Yes, we are using CTRE!  Use Phoenix 5 for now.  
     private PIDController[] turnPids;
+    private SparkPIDController[] drivePids;
     
     //sensor value buffers
     private double[] absSensorValues;
@@ -82,6 +75,7 @@ public class SwerveHw24 implements ISwerveDriveIo {
         for (int i = 0; i < turnPids.length; i++) {
             turnPids[i] = new PIDController(5.0, 1.8, 0.0);
         }
+
         
         //initialize each motor/sensor
         driveMotors[0] = new CANSparkMax(11, MotorType.kBrushless);
@@ -98,11 +92,21 @@ public class SwerveHw24 implements ISwerveDriveIo {
         absSensors[1] = new CANCoder(23);
         absSensors[2] = new CANCoder(33);
         absSensors[3] = new CANCoder(43);
+
+        // initialize the drive PID controllers
+        drivePids = new SparkPIDController[numWheels];
+        for (int i = 0; i < drivePids.length; i++) {
+            drivePids[i] = turnMotors[i].getPIDController();
+            drivePids[i].setP(0.5); // TODO: Tune these values. May need values specific per motor.
+            drivePids[i].setI(0.03);
+            drivePids[i].setD(0);
+            drivePids[i].setFF(1023 / (5 * COUNTS_PER_METER));
+            drivePids[i].setIZone(0);
+        }
         
         for (CANCoder sensor : absSensors) {
             sensor.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 18);
             sensor.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 250);
-            
         }
 
         for (CANSparkMax motor : driveMotors) {
@@ -127,7 +131,7 @@ public class SwerveHw24 implements ISwerveDriveIo {
             //allConfigs.motionAcceleration = 5 * COUNTS_PER_METER;
 
             //motor.configAllSettings(allConfigs);
-            motor.setSelectedSensorPosition(0);
+            // motor.setSelectedSensorPosition(0); Replaced with setPosition(0) for CANCoders below
             motor.setControlFramePeriodMs(40);
             //motor.setStatusFramePeriod(StatusFrame.Status_1_General, 40);
         }
@@ -146,14 +150,17 @@ public class SwerveHw24 implements ISwerveDriveIo {
             //allConfigs.motionCruiseVelocity = 20960;
             //allConfigs.motionAcceleration = 40960;
             //motor.configAllSettings(allConfigs);
-            motor.selectProfileSlot(1, 0);
+            // motor.selectProfileSlot(1, 0); TODO: May be vendor-specific. Need to check, though.
 
             //this stator current limit helps stop neutral brake faults
-            StatorCurrentLimitConfiguration cfg = new StatorCurrentLimitConfiguration();
-            cfg.enable = false;
-            cfg.currentLimit = 20;
-            cfg.triggerThresholdCurrent = 40;
-            motor.configStatorCurrentLimit(cfg);
+            //StatorCurrentLimitConfiguration cfg = new StatorCurrentLimitConfiguration();
+            //cfg.enable = false;
+            //cfg.currentLimit = 20;
+            //cfg.triggerThresholdCurrent = 40;
+            motor.setSmartCurrentLimit(20); // TODO: May need to comment these out since the CTRE version sets cfg to disabled.
+            motor.setSecondaryCurrentLimit(40);
+            
+            //motor.configStatorCurrentLimit(cfg);
             motor.setControlFramePeriodMs(40);
             //motor.setStatusFramePeriod(StatusFrame.Status_1_General, 40);
         }
@@ -231,7 +238,8 @@ public class SwerveHw24 implements ISwerveDriveIo {
 
     @Override
     public void setCornerState(int wheel, SwerveModuleState swerveModuleState) {
-        driveMotors[wheel].set(ControlMode.Velocity, swerveModuleState.speedMetersPerSecond * COUNTS_PER_METER);
+        //driveMotors[wheel].set(ControlMode.Velocity, swerveModuleState.speedMetersPerSecond * COUNTS_PER_METER);
+        drivePids[wheel].setReference(swerveModuleState.speedMetersPerSecond * COUNTS_PER_METER, ControlType.kVelocity);
 
         //we need the request to be within the boundaries, not wrap around the 180 point
         double turnRequest = MathUtil.inputModulus(swerveModuleState.angle.getDegrees(), correctedAngles[wheel] - 180, correctedAngles[wheel] + 180);
