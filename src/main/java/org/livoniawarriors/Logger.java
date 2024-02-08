@@ -20,10 +20,13 @@ import com.ctre.phoenix.sensors.Pigeon2_Faults;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_Faults;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.FaultID;
 
+import edu.wpi.first.hal.can.CANStatus;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -66,7 +69,7 @@ public class Logger implements Runnable {
         // Starts recording to data log
         DataLogManager.start();
         // Record both DS control and joystick data
-        var log = DataLogManager.getLog();
+        DataLog log = DataLogManager.getLog();
         DriverStation.startDataLog(log);
 
         // create our logging table references
@@ -141,22 +144,22 @@ public class Logger implements Runnable {
     public void run() {
         // Print keys
         for (String i : items.keySet()) {
-            var item = items.get(i);
+            Object item = items.get(i);
 
             if (item instanceof BaseTalon) {
                 readTalon(i, (BaseTalon) item);
             } else if (item instanceof DoubleSupplier) {
                 sensorTable.getEntry(i).setDouble(((DoubleSupplier) item).getAsDouble());
             } else if (item instanceof CANCoder) {
-                var coder = (CANCoder) item;
+                CANCoder coder = (CANCoder) item;
                 sensorTable.getEntry(i + " Angle").setDouble(coder.getAbsolutePosition());
                 sensorTable.getEntry(i + " Mag Str").setString(coder.getMagnetFieldStrength().name());
 
-                var faults = new CANCoderFaults();
+                CANCoderFaults faults = new CANCoderFaults();
                 coder.getFaults(faults);
                 faultTable.getEntry(i).setString(readFaultStruct(faults));
 
-                var sFaults = new CANCoderStickyFaults();
+                CANCoderStickyFaults sFaults = new CANCoderStickyFaults();
                 coder.getStickyFaults(sFaults);
                 stickyTable.getEntry(i).setString(readFaultStruct(sFaults));
                 canStatusTable.getEntry(i).setString(coder.getLastError().name());
@@ -190,13 +193,13 @@ public class Logger implements Runnable {
         }
 
         if (ph != null) {
-            var solenoids = ph.getSolenoids();
+            int solenoids = ph.getSolenoids();
             for (int i = 0; i < pneumaticNames.length; i++) {
                 if (pneumaticNames[i] != null) {
                     commandTable.getEntry(pneumaticNames[i]).setBoolean((solenoids & (1 << i)) == 1);
                 }
             }
-            var volts = ph.getAnalogVoltage(0);
+            double volts = ph.getAnalogVoltage(0);
             sensorTable.getEntry("Pressure Sensor").setDouble((volts - 0.5) / VOLTS_PER_PSI);
             sensorTable.getEntry("Pressure Sensor Voltage").setDouble(volts);
             currentTable.getEntry("Compressor").setDouble(ph.getCompressorCurrent());
@@ -222,7 +225,7 @@ public class Logger implements Runnable {
             canStatusTable.getEntry("Pigeon").setString(pigeon.getLastError().name());
 
             if (pigeon instanceof PigeonIMU) {
-                var p1 = (PigeonIMU) pigeon;
+                PigeonIMU p1 = (PigeonIMU) pigeon;
                 PigeonIMU_Faults p1Faults = new PigeonIMU_Faults();
                 p1.getFaults(p1Faults);
                 faultTable.getEntry("Pigeon").setString(readFaultStruct(p1Faults));
@@ -230,7 +233,7 @@ public class Logger implements Runnable {
                 p1.getStickyFaults(p1Faults);
                 stickyTable.getEntry("Pigeon").setString(readFaultStruct(p1Faults));
             } else if (pigeon instanceof Pigeon2) {
-                var p2 = (Pigeon2) pigeon;
+                Pigeon2 p2 = (Pigeon2) pigeon;
                 Pigeon2_Faults p2Faults = new Pigeon2_Faults();
                 p2.getFaults(p2Faults);
                 faultTable.getEntry("Pigeon").setString(readFaultStruct(p2Faults));
@@ -242,7 +245,7 @@ public class Logger implements Runnable {
             }
         }
 
-        var canStatus = RobotController.getCANStatus();
+        CANStatus canStatus = RobotController.getCANStatus();
         canStatusTable.getEntry("CAN Bandwidth").setDouble(canStatus.percentBusUtilization);
         canStatusTable.getEntry("CAN Bus Off Count").setDouble(canStatus.busOffCount);
         canStatusTable.getEntry("CAN RX Error Count").setDouble(canStatus.receiveErrorCount);
@@ -270,7 +273,7 @@ public class Logger implements Runnable {
 
         faultSet = false;
         for (String i : keys) {
-            var faultName = faultTable.getEntry(i).getString("EROR");
+            String faultName = faultTable.getEntry(i).getString("EROR");
             if (!faultName.equals("Ok")) {
                 faultSet = true;
             }
@@ -278,7 +281,7 @@ public class Logger implements Runnable {
 
         sfaultSet = false;
         for (String i : stickyKeys) {
-            var faultName = stickyTable.getEntry(i).getString("EROR");
+            String faultName = stickyTable.getEntry(i).getString("EROR");
             if (!faultName.equals("Ok")) {
                 sfaultSet = true;
             }
@@ -298,11 +301,11 @@ public class Logger implements Runnable {
         String sFaultStr;
         // reading the raw bits because we know there are faults not in Faults (aka
         // Neutral Brake Current Limit)
-        var handle = talon.getHandle();
-        var faultBits = MotControllerJNI.GetFaults(handle);
-        var error = talon.getLastError();
-        var sfaultBits = MotControllerJNI.GetStickyFaults(handle);
-        var error2 = talon.getLastError();
+        long handle = talon.getHandle();
+        int faultBits = MotControllerJNI.GetFaults(handle);
+        ErrorCode error = talon.getLastError();
+        int sfaultBits = MotControllerJNI.GetStickyFaults(handle);
+        ErrorCode error2 = talon.getLastError();
 
         if (error != ErrorCode.OK) {
             faultStr = error.name();
@@ -374,9 +377,9 @@ public class Logger implements Runnable {
             return "Ok";
         }
         StringBuilder work = new StringBuilder();
-        for (var i = 0; i < 15; i++) {
+        for (int i = 0; i < 15; i++) {
             if ((faults & (1 << i)) == 1) {
-                var fault = CANSparkMax.FaultID.fromId(i);
+                FaultID fault = CANSparkMax.FaultID.fromId(i);
                 work.append(fault.name()).append(" ");
             }
         }
@@ -384,7 +387,7 @@ public class Logger implements Runnable {
     }
 
     public static void checkClearFaults(boolean clear) {
-        var clearFaults = SmartDashboard.getBoolean("Clear Faults", false);
+        boolean clearFaults = SmartDashboard.getBoolean("Clear Faults", false);
 
         if (!clearFaults && !clear) {
             return;
@@ -392,12 +395,12 @@ public class Logger implements Runnable {
         SmartDashboard.putBoolean("Clear Faults", false);
 
         for (String name : items.keySet()) {
-            var item = items.get(name);
+            Object item = items.get(name);
             if (item instanceof BaseTalon) {
-                var talon = (BaseTalon) item;
+                BaseTalon talon = (BaseTalon) item;
                 talon.clearStickyFaults();
             } else if (item instanceof CANCoder) {
-                var coder = (CANCoder) item;
+                CANCoder coder = (CANCoder) item;
                 coder.clearStickyFaults();
             } else if (item instanceof CANSparkMax) {
                 spark = (CANSparkMax) item;

@@ -20,18 +20,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveDriveTrain extends SubsystemBase {
     /** The fastest rate we want the drive wheels to change speeds in m/s */
-    final String MAX_ACCEL_KEY = "Swerve Drive/Max Wheel Accel";
+    private static final String MAX_ACCEL_KEY = "Swerve Drive/Max Wheel Accel";
     /** The fastest rate we want the swerve wheels to turn in deg/s */
-    final String MAX_OMEGA_KEY = "Swerve Drive/Max Wheel Omega";
+    private static final String MAX_OMEGA_KEY = "Swerve Drive/Max Wheel Omega";
     /** The max speed possible with the swerve wheels in m/s */
-    final String MIN_SPEED_KEY = "Swerve Drive/Min Speed";
-    final String MAX_SPEED_KEY = "Swerve Drive/Max Speed";
+    private static final String MIN_SPEED_KEY = "Swerve Drive/Min Speed";
+    private static final String MAX_SPEED_KEY = "Swerve Drive/Max Speed";
     /**
      * The angle in degrees we want the swerve to invert the request to get to
      * position faster
      */
-    final String OPTIMIZE_ANGLE_KEY = "Swerve Drive/Optimize Angle";
-    final String FIELD_ORIENTED = "Swerve Drive/Field Oriented";
+    private static final String OPTIMIZE_ANGLE_KEY = "Swerve Drive/Optimize Angle";
+    private static final String FIELD_ORIENTED = "Swerve Drive/Field Oriented";
 
     private SwerveDriveKinematics kinematics;
     private ISwerveDriveIo hardware;
@@ -109,10 +109,11 @@ public class SwerveDriveTrain extends SubsystemBase {
                     .getNtPub("/Swerve Drive/Module " + moduleNames[wheel] + "/Request Speed (mps)", 0);
         }
 
-        /** How fast we want the driver to go during normal operation in m/s */
-        driverMaxSpeed = UtilFunctions.getSettingSub("/Swerve Drive/Max Driver Speed (mps)", 3);
+        /** How fast we want the driver to go during normal operation in m/s */ 
+        // max speed
+        driverMaxSpeed = UtilFunctions.getSettingSub("/Swerve Drive/Max Driver Speed (mps)", 1);
         /** How fast we want the driver to turn during normal operation in deg/s */
-        driverMaxOmega = UtilFunctions.getSettingSub("/Swerve Drive/Max Driver Omega (dps)", 625); // 1.8 * Pi rad/sec
+        driverMaxOmega = UtilFunctions.getSettingSub("/Swerve Drive/Max Driver Omega (dps)", 275); // 1.8 * Pi rad/sec
 
         swerveXSpeed = UtilFunctions.getNtPub("/Swerve Drive/X Speed (mps)", 0);
         swerveYSpeed = UtilFunctions.getNtPub("/Swerve Drive/Y Speed (mps)", 0);

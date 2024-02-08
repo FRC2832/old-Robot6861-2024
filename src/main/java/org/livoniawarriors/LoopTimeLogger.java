@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Tracer;
 import edu.wpi.first.wpilibj.Watchdog;
@@ -34,7 +35,7 @@ public class LoopTimeLogger implements Runnable {
             Watchdog watchDog = (Watchdog) field.get(robot); // At last it's yours.
             robotEpochs = watchToMap(watchDog);
 
-            var cs = CommandScheduler.getInstance();
+            CommandScheduler cs = CommandScheduler.getInstance();
             f = cs.getClass();
             field = f.getDeclaredField("m_watchdog");
             field.setAccessible(true);
@@ -50,7 +51,7 @@ public class LoopTimeLogger implements Runnable {
             throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
         // from the watchdog, get the tracer
         var watchClass = watchDog.getClass();
-        var field = watchClass.getDeclaredField("m_tracer");
+        Field field = watchClass.getDeclaredField("m_tracer");
         field.setAccessible(true);
         Tracer tracer = (Tracer) field.get(watchDog);
 
@@ -64,10 +65,10 @@ public class LoopTimeLogger implements Runnable {
     @Override
     public void run() {
         if (robotEpochs != null) {
-            var totalTime = 0.f;
-            for (var key : robotEpochs.keySet()) {
-                var entry = table.getEntry(key);
-                var time = robotEpochs.get(key) / 1000f;
+            double totalTime = 0.0;
+            for (String key : robotEpochs.keySet()) {
+                NetworkTableEntry entry = table.getEntry(key);
+                double time = robotEpochs.get(key) / 1000f;
                 entry.setDouble(time);
                 totalTime += time;
             }
@@ -75,10 +76,10 @@ public class LoopTimeLogger implements Runnable {
         }
 
         if (cmdEpochs != null) {
-            var cmdTime = 0.f;
-            for (var key : cmdEpochs.keySet()) {
-                var entry = table.getEntry(key);
-                var time = cmdEpochs.get(key) / 1000f;
+            double cmdTime = 0.0;
+            for (String key : cmdEpochs.keySet()) {
+                NetworkTableEntry entry = table.getEntry(key);
+                double time = cmdEpochs.get(key) / 1000f;
                 entry.setDouble(time);
                 cmdTime += time;
             }

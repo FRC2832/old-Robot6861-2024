@@ -66,7 +66,7 @@ public class SwerveDriveSim implements ISwerveDriveIo {
             
             //scale factor for hardware PID to software PID
             //360/2048 is 360 degrees per rev/encoder counts per rev divided by gear ratio
-            var k = (360f / 2048) * (7f / 150);
+            double k = (360f / 2048) * (7f / 150);
             turningPIDController[i] = new PIDController(1.5 * k, 0.0005 * k, 0 * k, 0.001);
         }
     }
@@ -84,34 +84,34 @@ public class SwerveDriveSim implements ISwerveDriveIo {
             } else if (driveCommand[i] == ControlMode.PercentOutput) {
                 driveSpeed[i] = drivePower[i] * kMaxSpeed;
             } else {
-                driveSpeed[i] = 0;
+                driveSpeed[i] = 0.0;
             }
             driveDist[i] += driveSpeed[i] * TimedRobot.kDefaultPeriod;
 
             //reset drive command back to zero
             driveCommand[i] = ControlMode.Disabled;
-            drivePower[i] = 0;
+            drivePower[i] = 0.0;
 
             //process turn command
             if (turnCommand[i] == ControlMode.Position) {
-                for (var loops = 0; loops < TimedRobot.kDefaultPeriod / 0.001; loops++) {
+                for (int loops = 0; loops < TimedRobot.kDefaultPeriod / 0.001; loops++) {
                     double turnOutput = turningPIDController[i].calculate(correctedAngle[i], turnPower[i]);
                     //update the sensor values
                     turnAngle[i] += turnOutput;
                     absAngle[i] += turnOutput;
                 }
             } else if (turnCommand[i] == ControlMode.PercentOutput) {
-                var turnOutput = -turnPower[i] * kNomBatVolt * TimedRobot.kDefaultPeriod / Kv_Turn;
+                double turnOutput = -turnPower[i] * kNomBatVolt * TimedRobot.kDefaultPeriod / Kv_Turn;
                 //update the sensor values
                 turnAngle[i] += turnOutput;
                 absAngle[i] += turnOutput;
-                turnPower[i] = 0;
+                turnPower[i] = 0.0;
             } else {
             }
 
             //reset turn command back to zero
             turnCommand[i] = ControlMode.Disabled;
-            turnPower[i] = 0;
+            turnPower[i] = 0.0;
         }
     }
 

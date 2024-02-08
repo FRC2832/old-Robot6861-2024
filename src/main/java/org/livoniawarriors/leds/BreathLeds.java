@@ -16,7 +16,7 @@ public class BreathLeds extends Command {
     private static final double MIN_VALUE = 25.0;
 
     private ILedSubsystem leds;
-    private AddressableLEDBuffer m_ledBuffer;
+    private AddressableLEDBuffer ledBuffer;
     private int hue, sat, breath;
     private boolean increment;
 
@@ -26,7 +26,7 @@ public class BreathLeds extends Command {
         hue = (int) hsv.hue;
         sat = (int) hsv.sat;
         addRequirements(leds);
-        m_ledBuffer = new AddressableLEDBuffer(leds.getLength());
+        ledBuffer = new AddressableLEDBuffer(leds.getLength());
     }
 
     @Override
@@ -55,10 +55,10 @@ public class BreathLeds extends Command {
         }
 
         // set the pattern
-        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-            m_ledBuffer.setHSV(i, hue, sat, breath);
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+            ledBuffer.setHSV(i, hue, sat, breath);
         }
-        leds.setData(m_ledBuffer);
+        leds.setData(ledBuffer);
     }
 
     @Override

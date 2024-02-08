@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.livoniawarriors.odometry.Odometry;
@@ -12,12 +13,14 @@ import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -69,7 +72,7 @@ public class VisionSystem extends SubsystemBase {
         frontCam.getLatestResult();
         if (frontPose.isPresent()) {
             EstimatedRobotPose pose = frontPose.get();
-            var deviations = getEstimationStdDeviations(pose.estimatedPose.toPose2d(), frontCamEstimator,
+            Matrix<N3, N1> deviations = getEstimationStdDeviations(pose.estimatedPose.toPose2d(), frontCamEstimator,
                     frontCam.getLatestResult());
             odometry.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds, deviations);
         }
@@ -86,7 +89,7 @@ public class VisionSystem extends SubsystemBase {
             visionSim.addAprilTags(aprilTagFieldLayout);
             // Create simulated camera properties. These can be set to mimic your actual
             // camera.
-            var cameraProp = new SimCameraProperties();
+            SimCameraProperties cameraProp = new SimCameraProperties();
             cameraProp.setCalibration(1280, 720, Rotation2d.fromDegrees(111));
             cameraProp.setCalibError(0.37, 0.13);
             cameraProp.setFPS(15);
@@ -119,11 +122,11 @@ public class VisionSystem extends SubsystemBase {
             PhotonPipelineResult result) {
         Matrix<N3, N1> estStdDeviations;
 
-        var targets = result.getTargets();
+        List<PhotonTrackedTarget> targets = result.getTargets();
         int numTags = 0;
         double avgDist = 0;
-        for (var tgt : targets) {
-            var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+        for (PhotonTrackedTarget tgt : targets) {
+            Optional<Pose3d> tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
             if (tagPose.isEmpty())
                 continue;
             numTags++;

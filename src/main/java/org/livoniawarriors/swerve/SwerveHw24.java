@@ -97,8 +97,8 @@ public class SwerveHw24 implements ISwerveDriveIo {
         drivePids = new SparkPIDController[numWheels];
         for (int i = 0; i < drivePids.length; i++) {
             drivePids[i] = turnMotors[i].getPIDController();
-            drivePids[i].setP(0.5); // TODO: Tune these values. May need values specific per motor.
-            drivePids[i].setI(0.03);
+            drivePids[i].setP(0); // TODO: Original = 0.5. Tune these values. May need values specific per motor.
+            drivePids[i].setI(0); //TODO: original = 0.03.
             drivePids[i].setD(0);
             drivePids[i].setFF(1023 / (5 * COUNTS_PER_METER));
             drivePids[i].setIZone(0);

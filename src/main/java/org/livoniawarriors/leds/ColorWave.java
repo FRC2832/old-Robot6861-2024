@@ -35,7 +35,7 @@ public class ColorWave extends Command {
     @Override
     public void execute() {
         // For every pixel
-        for (var i = 0; i < ledBuffer.getLength(); i++) {
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
             double hue = hueCalc.get(i);
             double value = valueCalc.get(i);
 
@@ -61,8 +61,8 @@ public class ColorWave extends Command {
      * Run a sine wave between 2 values
      */
     private class UpdateValues {
-        private double Min, Max;
-        private int Count, loop;
+        private double min, max;
+        private int count, loop;
 
         /**
          * Create the object
@@ -72,22 +72,22 @@ public class ColorWave extends Command {
          * @param count How many loops it takes to go finish a wave
          */
         public UpdateValues(double min, double max, int count) {
-            this.Min = Math.max(min, 0.0);
-            this.Max = Math.min(max, 255.0);
-            this.Count = count;
+            this.min = Math.max(min, 0.0);
+            this.max = Math.min(max, 255.0);
+            this.count = count;
         }
 
         public double get(int step) {
-            double diff = (Max - Min) / 2;
-            double mid = diff + Min;
+            double diff = (max - min) / 2;
+            double mid = diff + min;
 
-            double value = mid + diff * Math.sin(2 * Math.PI * (loop + step) / Count);
+            double value = mid + diff * Math.sin(2 * Math.PI * (loop + step) / count);
             return value;
         }
 
         public void step() {
             loop++;
-            loop %= Count;
+            loop %= count;
         }
     }
 }
