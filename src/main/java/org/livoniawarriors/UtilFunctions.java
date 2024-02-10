@@ -44,7 +44,7 @@ public class UtilFunctions {
         if (abs > deadband) {
             return Math.signum(input) * ((abs - deadband) / (1 - deadband));
         }
-        return 0;
+        return 0.0;
     }
 
     /**

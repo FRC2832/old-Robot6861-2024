@@ -39,6 +39,7 @@ public final class LightDriveCAN {
             this.matrix.get(txData, 0, 8);
             CANJNI.FRCNetCommCANSessionMuxSendMessage(LightDriveCAN.ldAddr + 1, txData, 100);
         } catch (UncleanStatusException ex) {
+            // Do nothing
         }
         this.matrix.rewind();
         try {
@@ -48,11 +49,12 @@ public final class LightDriveCAN {
                 this.rx.setBytes(this.rxData);
             }
         } catch (CANMessageNotFoundException ex2) {
+            // Do nothing
         }
     }
 
     public float getCurrent(final int ch) {
-        float current = 0.0f;
+        float current;
         switch (ch) {
             case 1: {
                 current = this.rx.i1;

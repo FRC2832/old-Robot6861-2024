@@ -32,7 +32,7 @@ public class MoveWheels extends Command {
         boolean result = true;
         for (int i = 0; i < states.length; i++) {
             double angle = positions[i].angle.minus(states[i].angle).getDegrees();
-            angle = MathUtil.inputModulus(angle, -180, 180);
+            angle = MathUtil.inputModulus(angle, -180.0, 180.0);
             if (Math.abs(angle) > 3 || states[i].speedMetersPerSecond > drive.getMinSpeed()) {
                 // never leave if this requests speed
                 result = false;
@@ -48,46 +48,46 @@ public class MoveWheels extends Command {
 
     public static SwerveModuleState[] wheelsStraight() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        states[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
-        states[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
-        states[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
-        states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+        states[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(0.0));
+        states[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(0.0));
+        states[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(0.0));
+        states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(0.0));
         return states;
     }
 
     public static SwerveModuleState[] wheelsDiamond() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        states[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(315));
-        states[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(225));
-        states[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-        states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(135));
+        states[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(315.0));
+        states[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(225.0));
+        states[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(45.0));
+        states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(135.0));
         return states;
     }
 
     public static SwerveModuleState[] wheelsCrossed() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        states[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-        states[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(315));
-        states[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(315));
-        states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+        states[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(45.0));
+        states[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(315.0));
+        states[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(315.0));
+        states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(45.0));
         return states;
     }
 
     public static SwerveModuleState[] driveWheelsStraight() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        states[0] = new SwerveModuleState(1, Rotation2d.fromDegrees(0));
-        states[1] = new SwerveModuleState(1, Rotation2d.fromDegrees(0));
-        states[2] = new SwerveModuleState(1, Rotation2d.fromDegrees(0));
-        states[3] = new SwerveModuleState(1, Rotation2d.fromDegrees(0));
+        states[0] = new SwerveModuleState(1, Rotation2d.fromDegrees(0.0));
+        states[1] = new SwerveModuleState(1, Rotation2d.fromDegrees(0.0));
+        states[2] = new SwerveModuleState(1, Rotation2d.fromDegrees(0.0));
+        states[3] = new SwerveModuleState(1, Rotation2d.fromDegrees(0.0));
         return states;
     }
 
     public static SwerveModuleState[] driveWheelsDiamond() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        states[0] = new SwerveModuleState(1, Rotation2d.fromDegrees(315));
-        states[1] = new SwerveModuleState(1, Rotation2d.fromDegrees(225));
-        states[2] = new SwerveModuleState(1, Rotation2d.fromDegrees(45));
-        states[3] = new SwerveModuleState(1, Rotation2d.fromDegrees(135));
+        states[0] = new SwerveModuleState(1, Rotation2d.fromDegrees(315.0));
+        states[1] = new SwerveModuleState(1, Rotation2d.fromDegrees(225.0));
+        states[2] = new SwerveModuleState(1, Rotation2d.fromDegrees(45.0));
+        states[3] = new SwerveModuleState(1, Rotation2d.fromDegrees(135.0));
         return states;
     }
 }
