@@ -40,13 +40,13 @@ public class SwerveHw24 implements ISwerveDriveIo {
     private double[] correctedAngles;
 
     //Swerve corner locations for kinematics
-    //22.25 -1.5" width 10.375"
-    //26.75" for the distance , 13.375"
+    //trackwidth = 25" /2 = 12.5"
+    //wheelbase = 25" /2 = 12.5"
     private Translation2d[] swervePositions = {
-        new Translation2d(0.264, 0.340), //TODO: measure these for our robot
-        new Translation2d(0.264, -0.340),
-        new Translation2d(-0.264, 0.340),
-        new Translation2d(-0.264, -0.340)
+        new Translation2d(0.3175, 0.3175), // FL 
+        new Translation2d(0.3175, -0.3175), // FR
+        new Translation2d(-0.3175, 0.3175), // RL
+        new Translation2d(-0.3175, -0.3175)   // RR
     };
 
     private String[] moduleNames = {
@@ -73,7 +73,8 @@ public class SwerveHw24 implements ISwerveDriveIo {
         //software turn PID setup
         turnPids = new PIDController[numWheels];
         for (int i = 0; i < turnPids.length; i++) {
-            turnPids[i] = new PIDController(5.0, 1.8, 0.0);
+            turnPids[i] = new PIDController(5.0, 1.8, 0.0); //TODO: change to SparkMax PID controller?? 
+                // TODO: record original kp, ki here then set kp, ki = 0 for tuning
         }
 
         
@@ -96,7 +97,7 @@ public class SwerveHw24 implements ISwerveDriveIo {
         // initialize the drive PID controllers
         drivePids = new SparkPIDController[numWheels];
         for (int i = 0; i < drivePids.length; i++) {
-            drivePids[i] = turnMotors[i].getPIDController();
+            drivePids[i] = turnMotors[i].getPIDController();  //TODO: driveMotors, not turnMotors?  Should be PID for turn motors separate from Drive motors.
             drivePids[i].setP(0); // TODO: Original = 0.5. Tune these values. May need values specific per motor.
             drivePids[i].setI(0); //TODO: original = 0.03.
             drivePids[i].setD(0);
