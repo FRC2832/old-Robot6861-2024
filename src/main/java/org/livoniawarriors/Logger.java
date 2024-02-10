@@ -19,6 +19,7 @@ import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.Pigeon2_Faults;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_Faults;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.FaultID;
 
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -40,9 +42,9 @@ import frc.robot.Robot;
 
 @SuppressWarnings("removal")
 public class Logger implements Runnable {
-    private final double VOLTS_PER_PSI = 1.931 / 100; // 2.431V at 100psi
+    private static final double VOLTS_PER_PSI = 1.931 / 100; // 2.431V at 100psi
 
-    private static HashMap<String, Object> items = new HashMap<String, Object>();
+    private static HashMap<String, Object> items = new HashMap<>();
     private static PowerDistribution pdp;
     private static String[] pdpNames;
     private static PneumaticHub ph;
@@ -61,8 +63,8 @@ public class Logger implements Runnable {
 
     private BooleanPublisher flashDrivePresent;
 
-    private static boolean faultSet;
-    private static boolean sfaultSet;
+    private static boolean isFaultSet;
+    private static boolean isSFaultSet;
     // solenoids, compressor
 
     public Logger() {
@@ -271,24 +273,24 @@ public class Logger implements Runnable {
         keys0.toArray(keys);
         stickyKeys0.toArray(stickyKeys);
 
-        faultSet = false;
+        isFaultSet = false;
         for (String i : keys) {
             String faultName = faultTable.getEntry(i).getString("EROR");
             if (!faultName.equals("Ok")) {
-                faultSet = true;
+                isFaultSet = true;
             }
         }
 
-        sfaultSet = false;
+        isSFaultSet = false;
         for (String i : stickyKeys) {
             String faultName = stickyTable.getEntry(i).getString("EROR");
             if (!faultName.equals("Ok")) {
-                sfaultSet = true;
+                isSFaultSet = true;
             }
         }
 
         boolean flashDriveAttached;
-        if (Robot.isReal()) {
+        if (RobotBase.isReal()) {
             flashDriveAttached = Files.exists(Paths.get("/u"));
         } else {
             flashDriveAttached = true;
@@ -379,7 +381,7 @@ public class Logger implements Runnable {
         StringBuilder work = new StringBuilder();
         for (int i = 0; i < 15; i++) {
             if ((faults & (1 << i)) == 1) {
-                FaultID fault = CANSparkMax.FaultID.fromId(i);
+                FaultID fault = CANSparkBase.FaultID.fromId(i);
                 work.append(fault.name()).append(" ");
             }
         }
@@ -423,11 +425,11 @@ public class Logger implements Runnable {
         }
     }
 
-    public static boolean FaultSet() {
-        return faultSet;
+    public static boolean getIsFaultSet() {
+        return isFaultSet;
     }
 
-    public static boolean StickyFaultSet() {
-        return sfaultSet;
+    public static boolean getIsStickyFaultSet() {
+        return isSFaultSet;
     }
 }

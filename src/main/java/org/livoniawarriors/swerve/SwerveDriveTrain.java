@@ -152,7 +152,7 @@ public class SwerveDriveTrain extends SubsystemBase {
         lastTeleop = curTeleop;
         resetZeroPid = false;
 
-        PushSwerveStates(swerveStates, swerveTargets);
+        pushSwerveStates(swerveStates, swerveTargets);
         minSpeed = UtilFunctions.getSetting(MIN_SPEED_KEY, 0.5);
         maxSpeed = UtilFunctions.getSetting(MAX_SPEED_KEY, 5);
     }
@@ -284,7 +284,7 @@ public class SwerveDriveTrain extends SubsystemBase {
         return outputStates;
     }
 
-    private void PushSwerveStates(SwerveModuleState[] state, SwerveModuleState[] request) {
+    private void pushSwerveStates(SwerveModuleState[] state, SwerveModuleState[] request) {
         int size = state.length;
         double[] states = new double[size * 2];
         double[] requests = new double[size * 2];

@@ -60,8 +60,8 @@ public class TargetLeds extends Command {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
             Color color = Color.kBlack;
             if ((center - NUM_DIM_PIXELS <= i) && (i <= center + NUM_DIM_PIXELS)) {
-                int bubble_bright = (int) (MAX_BRIGHT / (3 * Math.abs(center - i) + 1));
-                color = Color.fromHSV(hue, 255, bubble_bright);
+                int bubbleBright = (int) (MAX_BRIGHT / (3 * Math.abs(center - i) + 1));
+                color = Color.fromHSV(hue, 255, bubbleBright);
             }
 
             ledBuffer.setLED(i, color);
@@ -76,5 +76,6 @@ public class TargetLeds extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        // Do nothing
     }
 }

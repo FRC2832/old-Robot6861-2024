@@ -4,13 +4,7 @@
 
 package frc.robot;
 
-import org.livoniawarriors.leds.LedSubsystem;
-import org.livoniawarriors.leds.LightningFlash;
-import org.livoniawarriors.leds.RainbowLeds;
-import org.livoniawarriors.leds.TestLeds;
 import org.livoniawarriors.odometry.Odometry;
-import org.livoniawarriors.odometry.Pigeon2Gyro;
-import org.livoniawarriors.odometry.SimSwerveGyro;
 import org.livoniawarriors.swerve.DriveXbox;
 import org.livoniawarriors.swerve.MoveWheels;
 import org.livoniawarriors.swerve.SwerveDriveSim;
@@ -18,18 +12,14 @@ import org.livoniawarriors.swerve.SwerveDriveTrain;
 import org.livoniawarriors.swerve.SwerveHw24;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -68,7 +58,7 @@ public class RobotContainer {
             // TODO: Uncomment all vision once swerve is working 
         
         //build the robot based on the Rio ID of the robot
-        if (Robot.isSimulation() || (serNum.equals("031b525b")) || (serNum.equals("03064db7"))) {
+        if (RobotBase.isSimulation() || (serNum.equals("031b525b")) || (serNum.equals("03064db7"))) {
             //either buzz or simulation
             swerveDriveObj = new SwerveDriveTrain(new SwerveDriveSim(), odometryObj);
             //odometryObj.setGyroHardware(new SimSwerveGyro(swerveDrive));

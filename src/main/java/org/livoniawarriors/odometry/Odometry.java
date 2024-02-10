@@ -147,10 +147,7 @@ public class Odometry extends SubsystemBase {
      */
     public boolean shouldFlipAlliance() {
         Optional<Alliance> alliance = DriverStation.getAlliance();
-        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-            return true;
-        }
-        return false;
+        return alliance.isPresent() && alliance.get() == Alliance.Red;
     }
 
     public void setStartingPose(Pose2d pose) {

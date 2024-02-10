@@ -26,7 +26,8 @@ public class REVDigitBoard {
 	 */
 
 	private I2C i2c;
-	private DigitalInput buttonA, buttonB;
+	private DigitalInput buttonA;
+	private DigitalInput buttonB;
 	private AnalogInput pot;
 
 	private byte[][] charReg;
@@ -53,7 +54,7 @@ public class REVDigitBoard {
 		Timer.delay(.01);
 
 		charReg = new byte[37][2]; // charreg is short for character registry
-		charMap = new HashMap<Character, Integer>();
+		charMap = new HashMap<>();
 
 		charReg[0][0] = (byte) 0b00111111;
 		charReg[9][1] = (byte) 0b00000000; // 0
@@ -178,7 +179,7 @@ public class REVDigitBoard {
 			Integer g = (int) charMap.get(str.charAt(i));
 			charz[i] = g;
 		}
-		this._display(charz);
+		this.display(charz);
 	}
 
 	public void display(double batt) { // optimized for battery voltage, needs a double like 12.34
@@ -195,12 +196,12 @@ public class REVDigitBoard {
 		charz[2] = tenth;
 		charz[3] = hundredth;
 
-		this._display(charz);
+		this.display(charz);
 	}
 
 	public void clear() {
 		int[] charz = { 36, 36, 36, 36 }; // whyy java
-		this._display(charz);
+		this.display(charz);
 	}
 
 	public boolean getButtonA() {
@@ -217,7 +218,7 @@ public class REVDigitBoard {
 
 	////// not supposed to be publicly used..
 
-	private void _display(int[] charz) {
+	private void display(int[] charz) {
 		byte[] byte1 = new byte[10];
 		byte1[0] = (byte) (0b0000111100001111);
 		byte1[2] = charReg[charz[3]][0];

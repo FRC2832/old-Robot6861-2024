@@ -6,6 +6,7 @@ import java.util.Map;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Tracer;
 import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -25,7 +26,7 @@ public class LoopTimeLogger implements Runnable {
          * You don't get the time in updating SmartDashboard, LiveWindow, Shuffleboard,
          * and Simulation
          */
-        UtilFunctions.addPeriodic(this, Robot.kDefaultPeriod, 0);
+        UtilFunctions.addPeriodic(this, TimedRobot.kDefaultPeriod, 0);
         this.table = table;
         try {
             // read the robot class for the watchdog

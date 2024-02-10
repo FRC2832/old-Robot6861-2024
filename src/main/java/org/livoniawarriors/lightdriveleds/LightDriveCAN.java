@@ -6,7 +6,7 @@ import edu.wpi.first.hal.can.*;
 import edu.wpi.first.hal.util.UncleanStatusException;
 
 public final class LightDriveCAN {
-    private static int LD_ADDR;
+    private static int ldAddr;
     private ByteBuffer matrix;
     private RxPacket rx;
     // private boolean m_init;
@@ -15,7 +15,7 @@ public final class LightDriveCAN {
     private static ByteBuffer rxId;
 
     static {
-        LightDriveCAN.LD_ADDR = 33882112;
+        LightDriveCAN.ldAddr = 33882112;
     }
 
     public LightDriveCAN() {
@@ -31,13 +31,13 @@ public final class LightDriveCAN {
 
     public void update() {
         final byte[] txData = new byte[8];
-        LightDriveCAN.rxId.putInt(LightDriveCAN.LD_ADDR + 4);
+        LightDriveCAN.rxId.putInt(LightDriveCAN.ldAddr + 4);
         LightDriveCAN.rxId.rewind();
         try {
             this.matrix.get(txData, 0, 8);
-            CANJNI.FRCNetCommCANSessionMuxSendMessage(LightDriveCAN.LD_ADDR, txData, 100);
+            CANJNI.FRCNetCommCANSessionMuxSendMessage(LightDriveCAN.ldAddr, txData, 100);
             this.matrix.get(txData, 0, 8);
-            CANJNI.FRCNetCommCANSessionMuxSendMessage(LightDriveCAN.LD_ADDR + 1, txData, 100);
+            CANJNI.FRCNetCommCANSessionMuxSendMessage(LightDriveCAN.ldAddr + 1, txData, 100);
         } catch (UncleanStatusException ex) {
         }
         this.matrix.rewind();
@@ -119,9 +119,9 @@ public final class LightDriveCAN {
         byte green = (byte) (color.green * brightness);
         byte blue = (byte) (color.blue * brightness);
         ch = --ch * 3;
-        this.matrix.array()[ch] = (byte) green;
-        this.matrix.array()[ch + 1] = (byte) red;
-        this.matrix.array()[ch + 2] = (byte) blue;
+        this.matrix.array()[ch] = green;
+        this.matrix.array()[ch + 1] = red;
+        this.matrix.array()[ch + 2] = blue;
     }
 
     public void setLevel(final int ch, final byte level) {

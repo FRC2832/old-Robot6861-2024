@@ -22,6 +22,7 @@ public class RainbowLeds extends Command {
 
     @Override
     public void initialize() {
+        // Do nothing
     }
 
     @Override
@@ -48,5 +49,6 @@ public class RainbowLeds extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        // Do nothing
     }
 }

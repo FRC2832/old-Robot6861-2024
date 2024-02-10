@@ -9,12 +9,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IndexerSubsystem extends SubsystemBase {
     /** Creates a new IndexerSubsystem. */
     public IndexerSubsystem() {
+        // TODO add implementation
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        // Neo 550 with SparkMax.  MUST have very low current limit to start!!!  5A
-            // NEO 550's burn up in 7 sec!  It smells awful.
+        // Neo 550 with SparkMax. MUST have very low current limit to start!!! 5A
+        // NEO 550's burn up in 7 sec! It smells awful.
     }
 }

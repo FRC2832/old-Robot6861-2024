@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ColorWave extends Command {
     private ILedSubsystem leds;
     private AddressableLEDBuffer ledBuffer;
-    private UpdateValues hueCalc, valueCalc;
+    private UpdateValues hueCalc;
+    private UpdateValues valueCalc;
     private int sat;
 
     public ColorWave(ILedSubsystem leds, Color color) {
@@ -30,6 +31,7 @@ public class ColorWave extends Command {
 
     @Override
     public void initialize() {
+        // Do nothing
     }
 
     @Override
@@ -55,14 +57,17 @@ public class ColorWave extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        // Do nothing
     }
 
     /**
      * Run a sine wave between 2 values
      */
     private class UpdateValues {
-        private double min, max;
-        private int count, loop;
+        private double min;
+        private double max;
+        private int count;
+        private int loop;
 
         /**
          * Create the object
@@ -81,8 +86,7 @@ public class ColorWave extends Command {
             double diff = (max - min) / 2;
             double mid = diff + min;
 
-            double value = mid + diff * Math.sin(2 * Math.PI * (loop + step) / count);
-            return value;
+            return mid + diff * Math.sin(2 * Math.PI * (loop + step) / count);
         }
 
         public void step() {

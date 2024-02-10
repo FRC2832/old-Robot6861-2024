@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class OuttakeSubsystem extends SubsystemBase {
     /** Creates a new OuttakeSubsytem. */
     public OuttakeSubsystem() {
+        // TODO add implementation
     }
 
     @Override

@@ -17,7 +17,9 @@ public class BreathLeds extends Command {
 
     private ILedSubsystem leds;
     private AddressableLEDBuffer ledBuffer;
-    private int hue, sat, breath;
+    private int hue;
+    private int sat;
+    private int breath;
     private boolean increment;
 
     public BreathLeds(ILedSubsystem leds, Color color) {
@@ -68,5 +70,6 @@ public class BreathLeds extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        // Do nothing
     }
 }

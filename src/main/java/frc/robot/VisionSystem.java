@@ -44,7 +44,7 @@ public class VisionSystem extends SubsystemBase {
     // (Fake values. Experiment and determine estimation noise on an actual robot.)
     public static final Matrix<N3, N1> kSingleTagStdDeviations = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDeviations = VecBuilder.fill(0.5, 0.5, 1);
-    public static final double kMaxVisionDistance = 4;
+    public static final double MAX_VISION_DISTANCE = 4;
 
     public VisionSystem(Odometry odometry) {
         super();
@@ -136,7 +136,7 @@ public class VisionSystem extends SubsystemBase {
         if (numTags == 0) {
             // no tags
             estStdDeviations = kSingleTagStdDeviations;
-        } else if (numTags == 1 && avgDist > kMaxVisionDistance) {
+        } else if (numTags == 1 && avgDist > MAX_VISION_DISTANCE) {
             // one tag, but too far. Making these large so they will be ignored
             estStdDeviations = VecBuilder.fill(1e100, 1e100, 1e100);
         } else if (numTags == 1) {

@@ -27,7 +27,7 @@ public class PidConstants {
      * 
      * Units: Volts/error
      */
-    public double kP;
+    private double kP;
 
     /**
      * How much voltage do we add based on the sum of error. This number should be
@@ -37,21 +37,21 @@ public class PidConstants {
      * 
      * Units: Volts/sum of error
      */
-    public double kI;
+    private double kI;
 
     /**
      * How much voltage do we add to dampen rapid changes.
      * 
      * Units: Volts/change in error
      */
-    public double kD;
+    private double kD;
 
     /**
      * How many volts / max speed achievable.
      * 
      * Units Volts/request
      */
-    public double kF;
+    private double kF;
 
     /**
      * How much voltage is needed to start the mechanism moving. Setting to zero is
@@ -59,7 +59,7 @@ public class PidConstants {
      * 
      * Units: Volts
      */
-    public double kS;
+    private double kS;
 
     /**
      * How much voltage is needed to overcome gravity. Set to zero if not a vertical
@@ -67,14 +67,14 @@ public class PidConstants {
      * 
      * Units: Volts
      */
-    public double kG;
+    private double kG;
 
     /**
      * Also called kF, how many sensor units change per volt.
      * 
      * Units: Volts / Rev/S
      */
-    public double kV;
+    private double kV;
 
     /**
      * How many sensor units^s squared change per volt. Used to match the feed
@@ -83,7 +83,7 @@ public class PidConstants {
      * 
      * Units: Volts / Rev/S^2
      */
-    public double kA;
+    private double kA;
 
     /**
      * How much range you want before the I-Term enables. For example, if kiZone=10,
@@ -93,7 +93,7 @@ public class PidConstants {
      * 
      * Units: Distance
      */
-    public double kiZone;
+    private double kiZone;
 
     /**
      * How much range is allowable to turn off the PID. For example, if kiError = 2,
@@ -103,14 +103,14 @@ public class PidConstants {
      * 
      * Units: Distance
      */
-    public double kiError;
+    private double kiError;
 
     /**
      * Used in motion control to say the max speed the mechanism should travel.
      * 
      * Units: Distance/Sec
      */
-    public double kVelMax;
+    private double kVelMax;
 
     /**
      * Used in motion control to say the max acceleration the mechanism should
@@ -118,24 +118,24 @@ public class PidConstants {
      * 
      * Units: Distance/Sec^2
      */
-    public double kAccelMax;
+    private double kAccelMax;
 
     /**
      * Create a generic Constants table with no backing
      */
     public PidConstants() {
-        kP = 0;
-        kI = 0;
-        kD = 0;
-        kF = 0;
-        kS = 0;
-        kG = 0;
-        kV = 0;
-        kA = 0;
-        kiZone = 0;
-        kiError = 0;
-        kVelMax = 0;
-        kAccelMax = 0;
+        kP = 0.0;
+        kI = 0.0;
+        kD = 0.0;
+        kF = 0.0;
+        kS = 0.0;
+        kG = 0.0;
+        kV = 0.0;
+        kA = 0.0;
+        kiZone = 0.0;
+        kiError = 0.0;
+        kVelMax = 0.0;
+        kAccelMax = 0.0;
         key = null;
     }
 
@@ -259,5 +259,101 @@ public class PidConstants {
         pid.setSmartMotionMaxAccel(kAccelMax, 0);
 
         return pid;
+    }
+
+    public void setP(double p) {
+        kP = p;
+    }
+
+    public double getP() {
+        return kP;
+    }
+
+    public void setI(double i) {
+        kI = i;
+    }
+
+    public double getI() {
+        return kI;
+    }
+
+    public void setD(double d) {
+        kD = d;
+    }
+
+    public double getD() {
+        return kD;
+    }
+
+    public void setF(double f) {
+        kF = f;
+    }
+
+    public double getF() {
+        return kF;
+    }
+
+    public void setS(double s) {
+        kS = s;
+    }
+
+    public double getS() {
+        return kS;
+    }
+
+    public void setG(double g) {
+        kG = g;
+    }
+
+    public double getG() {
+        return kG;
+    }
+
+    public void setV(double v) {
+        kV = v;
+    }
+
+    public double getV() {
+        return kV;
+    }
+
+    public void setA(double a) {
+        kA = a;
+    }
+
+    public double getA() {
+        return kA;
+    }
+
+    public void setIZone(double iZone) {
+        kiZone = iZone;
+    }
+
+    public double getIZone() {
+        return kiZone;
+    }
+
+    public void setIError(double iError) {
+        kiError = iError;
+    }
+
+    public double getIError() {
+        return kiError;
+    }
+
+    public void setMaxVel(double maxVel) {
+        kVelMax = maxVel;
+    }
+
+    public double getMaxVel() {
+        return kVelMax;
+    }
+
+    public void setMaxAccel(double maxAccel) {
+        kAccelMax = maxAccel;
+    }
+
+    public double getMaxAccel() {
+        return kAccelMax;
     }
 }

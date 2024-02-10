@@ -23,6 +23,11 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 public class UtilFunctions {
+
+    private UtilFunctions() {
+        // Don't allow instantiation, as this is a utility class.
+    }
+    
     /**
      * This function takes a joystick input from -1 to 1 and removes the center of
      * the stick.
