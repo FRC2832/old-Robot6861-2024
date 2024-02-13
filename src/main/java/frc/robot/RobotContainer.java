@@ -84,25 +84,25 @@ public class RobotContainer {
         // NamedCommands.registerCommand("flashBlue", new LightningFlash(leds, Color.kFirstBlue));
 
         // Configure the AutoBuilder
-        AutoBuilder.configureHolonomic(
-            odometryObj::getPose, // Robot pose supplier
-            odometryObj::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            swerveDriveObj::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            swerveDriveObj::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                swerveDriveObj.getMaxSpeed(), // Max module speed, in m/s
-                swerveDriveObj.getDriveBaseRadius(), // Drive base radius in meters. Distance from robot center to furthest module.
-                new ReplanningConfig() // Default path replanning config. See the API for the options here
-            ),
-            odometryObj::shouldFlipAlliance, //shouldFlipPath Supplier that determines if paths should be flipped to the other side of the field. This will maintain a global blue alliance origin.
-            swerveDriveObj // Reference to this subsystem to set requirements
-        );
+        //AutoBuilder.configureHolonomic( //TODO: uncomment this to use Pathplanner!!!!
+            //odometryObj::getPose, // Robot pose supplier
+            //odometryObj::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            //swerveDriveObj::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+           // swerveDriveObj::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+           // new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                //new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                //new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+               // swerveDriveObj.getMaxSpeed(), // Max module speed, in m/s
+               // swerveDriveObj.getDriveBaseRadius(), // Drive base radius in meters. Distance from robot center to furthest module.
+               // new ReplanningConfig() // Default path replanning config. See the API for the options here
+          //  ),
+           // odometryObj::shouldFlipAlliance, //shouldFlipPath Supplier that determines if paths should be flipped to the other side of the field. This will maintain a global blue alliance origin.
+            //swerveDriveObj // Reference to this subsystem to set requirements
+       // );
 
         // Build an auto chooser. This will use Commands.none() as the default option.
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        //autoChooser = AutoBuilder.buildAutoChooser();
+        //SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     /**

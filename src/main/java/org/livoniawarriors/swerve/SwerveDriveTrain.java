@@ -38,7 +38,7 @@ public class SwerveDriveTrain extends SubsystemBase {
     private SwerveModulePosition[] swervePositions;
     private SwerveModuleState[] swerveTargets;
     private double gyroOffset = 0.0;
-    private PIDController pidZero = new PIDController(0.15, 0.001, 0);
+    private PIDController pidZero = new PIDController(0.15, 0.001, 0);  //TODO: what does pidZero do?  DO we need to zero the kp & ki before tuning our system?
     private SwerveModuleState[] swerveStates;
     private boolean optimize;
     private boolean resetZeroPid;
@@ -125,7 +125,7 @@ public class SwerveDriveTrain extends SubsystemBase {
     @Override
     public void periodic() {
         hardware.updateInputs();
-        currentHeading = odometry.getGyroRotation();
+        //currentHeading = odometry.getGyroRotation(); //TODO: must uncomment this to use odometry!!!!
 
         // read the swerve corner state
         for (int wheel = 0; wheel < swervePositions.length; wheel++) {
@@ -143,13 +143,13 @@ public class SwerveDriveTrain extends SubsystemBase {
 
         // when we are disabled, reset the turn pids as we don't want to act on the
         // "error" when reenabled
-        boolean curTeleop = DriverStation.isTeleopEnabled();
+        /* boolean curTeleop = DriverStation.isTeleopEnabled();  //TODO: uncomment this when swerve working!
         if (!lastTeleop && curTeleop || resetZeroPid) {
             gyroOffset = currentHeading.getDegrees();
             fieldOffset = currentHeading;
             pidZero.reset();
-        }
-        lastTeleop = curTeleop;
+        }*/
+        //lastTeleop = curTeleop;   //TODO uncomment this when uncomment lines 146-151
         resetZeroPid = false;
 
         pushSwerveStates(swerveStates, swerveTargets);
@@ -167,7 +167,7 @@ public class SwerveDriveTrain extends SubsystemBase {
     }
 
     public void swerveDrive(double xSpeed, double ySpeed, double turn) {
-        swerveDrive(xSpeed, ySpeed, turn, UtilFunctions.getSetting(FIELD_ORIENTED, true));
+        swerveDrive(xSpeed, ySpeed, turn, UtilFunctions.getSetting(FIELD_ORIENTED, false));
     }
 
     public void swerveDrive(double xSpeed, double ySpeed, double turn, boolean fieldOriented) {
@@ -180,7 +180,7 @@ public class SwerveDriveTrain extends SubsystemBase {
             pidZero.reset();
         } else {
             // straighten the robot
-            turn = pidZero.calculate(currentHeading.getDegrees(), gyroOffset);
+          //  turn = pidZero.calculate(currentHeading.getDegrees(), gyroOffset);
         }
 
         if (fieldOriented) {

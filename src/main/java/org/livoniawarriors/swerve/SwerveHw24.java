@@ -4,6 +4,7 @@ import org.livoniawarriors.Logger;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderStatusFrame;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
@@ -43,10 +44,10 @@ public class SwerveHw24 implements ISwerveDriveIo {
     //trackwidth = 25" /2 = 12.5"
     //wheelbase = 25" /2 = 12.5"
     private Translation2d[] swervePositions = {
-        new Translation2d(0.3175, 0.3175), // FL 
-        new Translation2d(0.3175, -0.3175), // FR
-        new Translation2d(-0.3175, 0.3175), // RL
-        new Translation2d(-0.3175, -0.3175)   // RR
+        new Translation2d(0.3175, 0.3175), // FL  meters
+        new Translation2d(0.3175, -0.3175), // FR  meters
+        new Translation2d(-0.3175, 0.3175), // RL   meters
+        new Translation2d(-0.3175, -0.3175)   // RR  meters
     };
 
     private String[] moduleNames = {
@@ -71,11 +72,12 @@ public class SwerveHw24 implements ISwerveDriveIo {
         correctedAngles = new double[numWheels];
 
         //software turn PID setup
-        turnPids = new PIDController[numWheels];
-        for (int i = 0; i < turnPids.length; i++) {
-            turnPids[i] = new PIDController(5.0, 1.8, 0.0); //TODO: change to SparkMax PID controller?? 
-                // TODO: record original kp, ki here then set kp, ki = 0 for tuning
-        }
+
+        // turnPids = new PIDController[numWheels];
+        //for (int i = 0; i < turnPids.length; i++) {
+            //turnPids[i] = new PIDController(0, 0, 0.0); //TODO: change to SparkMax PID controller?? 
+                // TODO: original kp = 5, ki = 1.8, set kp, ki = 0 for tuning
+       // }
 
         
         //initialize each motor/sensor
@@ -95,15 +97,15 @@ public class SwerveHw24 implements ISwerveDriveIo {
         absSensors[3] = new CANCoder(43);
 
         // initialize the drive PID controllers
-        drivePids = new SparkPIDController[numWheels];
-        for (int i = 0; i < drivePids.length; i++) {
-            drivePids[i] = turnMotors[i].getPIDController();  //TODO: driveMotors, not turnMotors?  Should be PID for turn motors separate from Drive motors.
-            drivePids[i].setP(0); // TODO: Original = 0.5. Tune these values. May need values specific per motor.
-            drivePids[i].setI(0); //TODO: original = 0.03.
-            drivePids[i].setD(0);
-            drivePids[i].setFF(1023 / (5 * COUNTS_PER_METER));
-            drivePids[i].setIZone(0);
-        }
+        // drivePids = new SparkPIDController[numWheels];
+       // for (int i = 0; i < drivePids.length; i++) {
+            //drivePids[i] = driveMotors[i].getPIDController(); 
+           // drivePids[i].setP(0); // TODO: Original = 0.5. Tune these values. May need values specific per motor.
+            //drivePids[i].setI(0); //TODO: original = 0.03.
+            //drivePids[i].setD(0);
+           //drivePids[i].setFF(1023 / (5 * COUNTS_PER_METER));
+            //drivePids[i].setIZone(0);
+        //}
         
         for (CANCoder sensor : absSensors) {
             sensor.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 18);
@@ -243,17 +245,24 @@ public class SwerveHw24 implements ISwerveDriveIo {
     @Override
     public void setCornerState(int wheel, SwerveModuleState swerveModuleState) {
         //driveMotors[wheel].set(ControlMode.Velocity, swerveModuleState.speedMetersPerSecond * COUNTS_PER_METER);
-        drivePids[wheel].setReference(swerveModuleState.speedMetersPerSecond * COUNTS_PER_METER, ControlType.kVelocity);
+        //driveMotors[wheel].set(swerveModuleState.speedMetersPerSecond * COUNTS_PER_METER, CANSparkBase.ControlType.kDutyCycle);
+        // Does not work ^
+
+        // drivePids[wheel].setReference(swerveModuleState.speedMetersPerSecond * COUNTS_PER_METER, ControlType.kVelocity); //TODO: was kVelocity, changed to open loop per 
+        //REv instructions to go open loop for checking CANcoder direction. Plus, leave OPen loop for determing Feedforward and PID constants
 
         //we need the request to be within the boundaries, not wrap around the 180 point
         double turnRequest = MathUtil.inputModulus(swerveModuleState.angle.getDegrees(), correctedAngles[wheel] - 180, correctedAngles[wheel] + 180);
         if (Math.abs(correctedAngles[wheel] - turnRequest) < 1) {
             //reset the PID to remove all the I term error so we don't overshoot and rebound
-            turnPids[wheel].reset();
+            turnPids[wheel].reset();  //TODO: robot code won't enable because this is null. 
+            //TODO: (continued from above) Need to figure out how to set turnPIDS to open loop - just set all PID gains to 0?
         }
         double turnVolts = -turnPids[wheel].calculate(Math.toRadians(correctedAngles[wheel]), Math.toRadians(turnRequest));
         //turnMotors[wheel].set(ControlMode.PercentOutput, turnVolts / RobotController.getBatteryVoltage());
-        turnMotors[wheel].set(turnVolts / RobotController.getBatteryVoltage());
+        turnMotors[wheel].set(turnVolts / RobotController.getBatteryVoltage());  //TODO: looks like alreadyt open loop?  open loop per 
+        //REv instructions to go open loop for checking CANcoder direction. Plus, leave OPen loop for determing Feedforward and PID constants
+        // TODO: add position control for turn motors?
     }
 
     @Override
@@ -275,4 +284,4 @@ public class SwerveHw24 implements ISwerveDriveIo {
     public void setCorrectedAngle(int wheel, double angle) {
         correctedAngles[wheel] = angle;
     }
-}
+} 
