@@ -16,13 +16,17 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.baseswerve.BaseSwerveJoystickCmd;
+import frc.robot.subsystems.BaseSwerveSubsystem;
 import frc.robot.subsystems.JoystickSubsystem;
 
 /**
@@ -33,9 +37,18 @@ import frc.robot.subsystems.JoystickSubsystem;
  */
 public class RobotContainer {
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
-    private SwerveDriveTrain swerveDriveObj;
-    private Odometry odometryObj;
-    private JoystickSubsystem joystickSubsystemObj;
+    
+    // Characterization Code 
+    private final BaseSwerveSubsystem baseSwerveObj = new BaseSwerveSubsystem();
+    private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
+
+    
+    
+    
+   // TODO: uncomment these once characterization is done 
+    //private SwerveDriveTrain swerveDriveObj;
+    //private Odometry odometryObj;
+    //private JoystickSubsystem joystickSubsystemObj;
     // private LedSubsystem leds;
 
     // private XboxController driverController;
@@ -43,6 +56,25 @@ public class RobotContainer {
     private SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
+
+        // Characteriztation Code
+         baseSwerveObj.setDefaultCommand(new BaseSwerveJoystickCmd(
+                baseSwerveObj,
+                () -> -driverJoystick.getRawAxis(OIConstants.kDriverYAxis),
+                () -> driverJoystick.getRawAxis(OIConstants.kDriverXAxis),
+                () -> driverJoystick.getRawAxis(OIConstants.kDriverRotAxis),
+                () -> !driverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+
+        configureButtonBindings();
+
+    }
+
+    private void configureButtonBindings() {
+        new JoystickButton(driverJoystick, 2).whenPressed(() -> swerveSubsystem.zeroHeading());
+    }
+
+
+        
         // driverController = new XboxController(0);
         String serNum = RobotController.getSerialNumber();
         SmartDashboard.putString("Serial Number", serNum);
@@ -51,22 +83,24 @@ public class RobotContainer {
         //03064db7 = big buzz
 
         //subsystems used in all robots
-        joystickSubsystemObj = new JoystickSubsystem();
+        //joystickSubsystemObj = new JoystickSubsystem(); //TODO: Uncomment all Odometry once swerve is working
         // odometryObj = new Odometry(); //TODO: Uncomment all Odometry once swerve is working
         // leds = new LedSubsystem(0, 10);
         // new VisionSystem(odometryObj); //not making variable as we won't change this subsystem 
             // TODO: Uncomment all vision once swerve is working 
         
+
+        //TODO: uncomment lines 76-84 when characterization is done
         //build the robot based on the Rio ID of the robot
-        if (RobotBase.isSimulation() || (serNum.equals("031b525b")) || (serNum.equals("03064db7"))) {
+        //if (RobotBase.isSimulation() || (serNum.equals("031b525b")) || (serNum.equals("03064db7"))) {
             //either buzz or simulation
-            swerveDriveObj = new SwerveDriveTrain(new SwerveDriveSim(), odometryObj);
+            //swerveDriveObj = new SwerveDriveTrain(new SwerveDriveSim(), odometryObj);
             //odometryObj.setGyroHardware(new SimSwerveGyro(swerveDrive));
-        } else {
+        //} else {
             //competition robot
-            swerveDriveObj = new SwerveDriveTrain(new SwerveHw24(), odometryObj);
+            //swerveDriveObj = new SwerveDriveTrain(new SwerveHw24(), odometryObj);
             //odometryObj.setGyroHardware(new Pigeon2Gyro(0));
-        }
+        //}
         
         //odometryObj.setSwerveDrive(swerveDrive);
         //odometryObj.setStartingPose(new Pose2d(1.92, 2.79, new Rotation2d(0)));
@@ -116,7 +150,7 @@ public class RobotContainer {
      */
     public void configureBindings() {
         //setup default commands that are used for driving
-        swerveDriveObj.setDefaultCommand(new DriveXbox(swerveDriveObj, joystickSubsystemObj));
+        //swerveDriveObj.setDefaultCommand(new DriveXbox(swerveDriveObj, joystickSubsystemObj));
         // leds.setDefaultCommand(new RainbowLeds(leds));
     }
 

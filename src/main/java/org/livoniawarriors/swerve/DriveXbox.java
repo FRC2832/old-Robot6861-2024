@@ -33,6 +33,8 @@ public class DriveXbox extends Command {
         swerveDriveTrainObj.swerveDrive(0.0, 0.0, 0.0, false);
     }
 
+    //TODO: change false to true for field oriented?
+
     @Override
     public void execute() {
         // driver clicked field reset stick

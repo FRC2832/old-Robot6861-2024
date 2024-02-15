@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public interface ISwerveDriveIo {
-    void updateInputs();
+    void updateInputs();  //defined on line 191 of SwerveHW24.java
 
     Translation2d[] getCornerLocations();
 

@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
     private Command autonomousCommand;
-    private RobotContainer robotContainer;
+    private RobotContainer m_robotContainer;
     private Logger logger;
 
     /**
@@ -60,8 +60,8 @@ public class Robot extends TimedRobot {
 
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
-        robotContainer = new RobotContainer();
-        robotContainer.configureBindings();
+        m_robotContainer = new RobotContainer();
+        m_robotContainer.configureBindings();
 
         //start logging class after all the subsystems have initialized
         logger.start();
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
     /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
     @Override
     public void autonomousInit() {
-        autonomousCommand = robotContainer.getAutonomousCommand();
+        autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
@@ -119,7 +119,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().getActiveButtonLoop().clear();
         //since we sometimes switch configurations based on controller type, 
         //reset the bindings
-        robotContainer.configureBindings();
+        m_robotContainer.configureBindings();
     }
 
     /** This function is called periodically during operator control. */
