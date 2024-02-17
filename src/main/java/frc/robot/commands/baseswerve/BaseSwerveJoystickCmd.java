@@ -73,6 +73,20 @@ public class BaseSwerveJoystickCmd extends Command {
         turningSpeed = turningLimiter.calculate(turningSpeed)
                 * RobotConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
+        //Turtle mode kinda: //TODO: remove when ready for more speed
+        if(xSpeed > 0.4) {
+          xSpeed = 0.4;
+        }
+
+        if(ySpeed > 0.4) {
+          ySpeed = 0.4;
+        }
+
+         if(turningSpeed > 0.2) {
+          ySpeed = 0.2;
+        }
+    
+
         // 4. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
         if (fieldOrientedFunction.get()) {

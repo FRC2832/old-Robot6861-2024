@@ -10,8 +10,8 @@ public final class RobotConstants {
 	public static final int OPERATOR_CONTROLLER = 1;
 	// Base Swerve Constants
 	// Module Constants
-	public static final double kDriveMotorGearRatio = 1 / 6.75;
-	public static final double kTurningMotorGearRatio = 1 / (150/7);
+	public static final double kDriveMotorGearRatio = 1.0 / 6.75;
+	public static final double kTurningMotorGearRatio = 1.0 / (150.0/7.0);
 	public static final double kWheelDiameterMeters = Units.inchesToMeters(4.0);
 	public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
 	public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
@@ -24,7 +24,7 @@ public final class RobotConstants {
 	public static final boolean kFrontLeftDriveEncoderReversed = false;
     public static final boolean kFrontLeftTurningEncoderReversed = true;
     public static final int kFrontLeftDriveAbsoluteEncoderPort = 13;
-    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 0.0;
+    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -0.53761;//*(2*Math.PI);
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
 	public static final int kFrontLeftTurningMotorPort = 12;
 
@@ -34,7 +34,7 @@ public final class RobotConstants {
     public static final boolean kFrontRightDriveEncoderReversed = false;
 	public static final boolean kFrontRightTurningEncoderReversed = true;
 	public static final int kFrontRightDriveAbsoluteEncoderPort = 23;
-    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.0;
+    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.75;//-0.48176;//*(2*Math.PI);
 	public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
 
     // Back Left
@@ -43,7 +43,7 @@ public final class RobotConstants {
     public static final boolean kBackLeftDriveEncoderReversed = false;
     public static final boolean kBackLeftTurningEncoderReversed = true;
     public static final int kBackLeftDriveAbsoluteEncoderPort = 33;
-    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 0.0;
+    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -0.53762;//*(2*Math.PI);
 	public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
 
 	// Back Right
@@ -52,11 +52,11 @@ public final class RobotConstants {
 	public static final int kBackRightDriveAbsoluteEncoderPort = 43;
 	public static final boolean kBackRightTurningEncoderReversed = false;
 	public static final boolean kBackRightDriveEncoderReversed = true;
-	public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 0.0;
+	public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -0.35608; //*(2*Math.PI);
 	public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-	public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.0;
-	public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3.0;
+	public static final double kTeleDriveMaxAccelerationUnitsPerSecond = .5; //TODO: was 3
+	public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = .5; //TODO: was 3, 
     public static final double kDeadband = 0.05;
 	public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
 

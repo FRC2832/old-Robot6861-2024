@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -17,6 +19,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotConstants;
 
@@ -80,6 +83,7 @@ public class BaseSwerveModuleSubsystem extends SubsystemBase {
 
     public double getAbsoluteEncoderRad() {
         double angle = absoluteEncoder.getSupplyVoltage().getValue() / RobotController.getVoltage5V();
+        //double angle = hardware.getCornerAbsAngle(wheel) - offset;
         angle *= 2.0 * Math.PI;
         angle -= absoluteEncoderOffsetRad;
         if (absoluteEncoderReversed) {
@@ -93,6 +97,7 @@ public class BaseSwerveModuleSubsystem extends SubsystemBase {
         driveEncoder.setPosition(0.0);
         turningEncoder.setPosition(getAbsoluteEncoderRad());
         SmartDashboard.putData(absoluteEncoder);
+        SmartDashboard.putNumber("Angle from code[" + absoluteEncoder.getDeviceID() + "] ", getAbsoluteEncoderRad());
         SmartDashboard.putNumber("Turn Encoder[" + absoluteEncoder.getDeviceID() + "] position (yes, this is turn encoder!)", turningEncoder.getPosition());
     }
 

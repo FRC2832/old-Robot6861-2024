@@ -97,6 +97,11 @@ public class BaseSwerveSubsystem extends SubsystemBase {
        // odometer.update(getRotation2d(), frontLeft.getState(), frontRight.getState(), backLeft.getState(),
                 // backRight.getState());
         SmartDashboard.putNumber("Robot Heading", getHeading());
+        SmartDashboard.putNumber("Turn encoder front left:", frontLeft.getTurningPosition());
+        SmartDashboard.putNumber("Turn encoder front right:", frontRight.getTurningPosition());
+        SmartDashboard.putNumber("Turn encoder back left:", backLeft.getTurningPosition());
+        SmartDashboard.putNumber("Turn encoder back right:", backRight.getTurningPosition());
+
         // SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     }
 
