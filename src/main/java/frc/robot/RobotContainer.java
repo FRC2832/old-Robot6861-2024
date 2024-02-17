@@ -40,7 +40,7 @@ public class RobotContainer {
     
     // Characterization Code 
     private final BaseSwerveSubsystem baseSwerveObj = new BaseSwerveSubsystem();
-    private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
+    private final Joystick driverJoystick = new Joystick(RobotConstants.DRIVER_CONTROLLER);
 
     
     
@@ -53,26 +53,20 @@ public class RobotContainer {
 
     // private XboxController driverController;
 
-    private SendableChooser<Command> autoChooser;
+   // private SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
+
+        //part of BaseWerve code:
 
         // Characteriztation Code
          baseSwerveObj.setDefaultCommand(new BaseSwerveJoystickCmd(
                 baseSwerveObj,
-                () -> -driverJoystick.getRawAxis(OIConstants.kDriverYAxis),
-                () -> driverJoystick.getRawAxis(OIConstants.kDriverXAxis),
-                () -> driverJoystick.getRawAxis(OIConstants.kDriverRotAxis),
-                () -> !driverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
-
-        configureButtonBindings();
-
-    }
-
-    private void configureButtonBindings() {
-        new JoystickButton(driverJoystick, 2).whenPressed(() -> swerveSubsystem.zeroHeading());
-    }
-
+                () -> -driverJoystick.getRawAxis(RobotConstants.kDriverYAxis),
+                () -> driverJoystick.getRawAxis(RobotConstants.kDriverXAxis),
+                () -> driverJoystick.getRawAxis(RobotConstants.kDriverRotAxis),
+                () -> !driverJoystick.getRawButton(RobotConstants.kDriverFieldOrientedButtonIdx)));
+    // end of baseswerve code
 
         
         // driverController = new XboxController(0);
@@ -106,11 +100,13 @@ public class RobotContainer {
         //odometryObj.setStartingPose(new Pose2d(1.92, 2.79, new Rotation2d(0)));
 
         //add some buttons to press for development
+        /*
         SmartDashboard.putData("Wheels Straight", new MoveWheels(swerveDriveObj, MoveWheels.wheelsStraight()));
         SmartDashboard.putData("Wheels Crossed", new MoveWheels(swerveDriveObj, MoveWheels.wheelsCrossed()));
         SmartDashboard.putData("Wheels Diamond", new MoveWheels(swerveDriveObj, MoveWheels.wheelsDiamond()));
         SmartDashboard.putData("Drive Wheels Straight", new MoveWheels(swerveDriveObj, MoveWheels.driveWheelsStraight()));
         SmartDashboard.putData("Drive Wheels Diamond", new MoveWheels(swerveDriveObj, MoveWheels.driveWheelsDiamond()));
+        */
         // SmartDashboard.putData("Test Leds", new TestLeds(leds));
 
         // Register Named Commands for PathPlanner
@@ -137,7 +133,18 @@ public class RobotContainer {
         // Build an auto chooser. This will use Commands.none() as the default option.
         //autoChooser = AutoBuilder.buildAutoChooser();
         //SmartDashboard.putData("Auto Chooser", autoChooser);
+        configureButtonBindings();
+
     }
+
+    
+
+    private void configureButtonBindings() {
+        //new JoystickButton(driverJoystick, 2).whileTrue(getAutonomousCommand());
+    }
+
+    // end of baseswerve code
+
 
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -159,7 +166,7 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
-    }
+    //public Command getAutonomousCommand() {
+      //  return autoChooser.getSelected();
+    //}
 }

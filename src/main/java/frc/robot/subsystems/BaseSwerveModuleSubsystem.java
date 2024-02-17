@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotConstants;
 
 public class BaseSwerveModuleSubsystem extends SubsystemBase {
     /** Creates a new BaseSwerveModuleSubsystem. */
@@ -28,7 +30,7 @@ public class BaseSwerveModuleSubsystem extends SubsystemBase {
 
     private final PIDController turningPidController;
 
-    private final AnalogInput absoluteEncoder;
+    private final CANcoder absoluteEncoder;
     private final boolean absoluteEncoderReversed;
     private final double absoluteEncoderOffsetRad;
 
@@ -38,7 +40,7 @@ public class BaseSwerveModuleSubsystem extends SubsystemBase {
 
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
-        absoluteEncoder = new AnalogInput(absoluteEncoderId);
+        absoluteEncoder = new CANcoder(absoluteEncoderId);
 
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorId, MotorType.kBrushless);
@@ -49,12 +51,12 @@ public class BaseSwerveModuleSubsystem extends SubsystemBase {
         driveEncoder = driveMotor.getEncoder();
         turningEncoder = turningMotor.getEncoder();
 
-        driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
-        driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
-        turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
-        turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
+        driveEncoder.setPositionConversionFactor(RobotConstants.kDriveEncoderRot2Meter);
+        driveEncoder.setVelocityConversionFactor(RobotConstants.kDriveEncoderRPM2MeterPerSec);
+        turningEncoder.setPositionConversionFactor(RobotConstants.kTurningEncoderRot2Rad);
+        turningEncoder.setVelocityConversionFactor(RobotConstants.kTurningEncoderRPM2RadPerSec);
 
-        turningPidController = new PIDController(ModuleConstants.kPTurning, 0.0, 0.0);
+        turningPidController = new PIDController(RobotConstants.kPTurning, 0.0, 0.0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
         resetEncoders();
@@ -77,7 +79,7 @@ public class BaseSwerveModuleSubsystem extends SubsystemBase {
     }
 
     public double getAbsoluteEncoderRad() {
-        double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
+        double angle = absoluteEncoder.getSupplyVoltage().getValue() / RobotController.getVoltage5V();
         angle *= 2.0 * Math.PI;
         angle -= absoluteEncoderOffsetRad;
         if (absoluteEncoderReversed) {
@@ -90,6 +92,8 @@ public class BaseSwerveModuleSubsystem extends SubsystemBase {
     public void resetEncoders() {
         driveEncoder.setPosition(0.0);
         turningEncoder.setPosition(getAbsoluteEncoderRad());
+        SmartDashboard.putData(absoluteEncoder);
+        SmartDashboard.putNumber("Turn Encoder[" + absoluteEncoder.getDeviceID() + "] position (yes, this is turn encoder!)", turningEncoder.getPosition());
     }
 
     public SwerveModuleState getState() {
@@ -97,14 +101,14 @@ public class BaseSwerveModuleSubsystem extends SubsystemBase {
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        if (Math.abs(state.speedMetersPerSecond) < 0.001) { //TODO: Adjust the margin of error
+        if (Math.abs(state.speedMetersPerSecond) < 0.01) { //TODO: Adjust the margin of error
             stop();
             return;
         }
         state = SwerveModuleState.optimize(state, getState().angle);
-        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        driveMotor.set(state.speedMetersPerSecond / RobotConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
-        SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
+        SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
     }
 
     public void stop() {
